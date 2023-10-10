@@ -19,8 +19,9 @@ namespace FocusAPI.Data.Migrations
 
             modelBuilder.Entity("FocusAPI.Data.AppUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -47,31 +48,42 @@ namespace FocusAPI.Data.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Roles")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserRoleId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserRoleId");
 
                     b.ToTable("AppUsers");
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = 1,
                             Email = "remik007@gmail.com",
-                            FirstName = "Remigiusz",
-                            LastName = "Majka",
+                            FirstName = "Test",
+                            LastName = "Admin",
                             Password = "admin",
                             PhoneNumber = "123123123",
-                            Roles = "Admin",
-                            UserName = "Admin"
+                            UserName = "Admin",
+                            UserRoleId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "remik0072@gmail.com",
+                            FirstName = "Test",
+                            LastName = "User",
+                            Password = "testuser",
+                            PhoneNumber = "1231231232",
+                            UserName = "TestUser",
+                            UserRoleId = 1
                         });
                 });
 
@@ -174,16 +186,12 @@ namespace FocusAPI.Data.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("OwnerId1")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("TripId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId1");
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("TripId");
 
@@ -323,6 +331,44 @@ namespace FocusAPI.Data.Migrations
                     b.ToTable("TripTypes");
                 });
 
+            modelBuilder.Entity("FocusAPI.Data.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "User"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Admin"
+                        });
+                });
+
+            modelBuilder.Entity("FocusAPI.Data.AppUser", b =>
+                {
+                    b.HasOne("FocusAPI.Data.UserRole", "UserRole")
+                        .WithMany()
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRole");
+                });
+
             modelBuilder.Entity("FocusAPI.Data.Participant", b =>
                 {
                     b.HasOne("FocusAPI.Data.Reservation", "Reservation")
@@ -338,7 +384,7 @@ namespace FocusAPI.Data.Migrations
                 {
                     b.HasOne("FocusAPI.Data.AppUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId1")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -3,32 +3,16 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace FocusAPI.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "AppUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    Password = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    FirstName = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 16, nullable: false),
-                    Roles = table.Column<string>(type: "TEXT", maxLength: 1024, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AppUsers", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Contacts",
                 columns: table => new
@@ -93,6 +77,19 @@ namespace FocusAPI.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trips",
                 columns: table => new
                 {
@@ -129,21 +126,45 @@ namespace FocusAPI.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    Password = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 16, nullable: false),
+                    UserRoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppUsers_UserRoles_UserRoleId",
+                        column: x => x.UserRoleId,
+                        principalTable: "UserRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reservations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     OwnerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OwnerId1 = table.Column<string>(type: "TEXT", nullable: false),
                     TripId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_AppUsers_OwnerId1",
-                        column: x => x.OwnerId1,
+                        name: "FK_Reservations_AppUsers_OwnerId",
+                        column: x => x.OwnerId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -180,9 +201,27 @@ namespace FocusAPI.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "UserRoles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "User" },
+                    { 2, "Admin" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "AppUsers",
-                columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "PhoneNumber", "Roles", "UserName" },
-                values: new object[] { "1", "remik007@gmail.com", "Remigiusz", "Majka", "admin", "123123123", "Admin", "Admin" });
+                columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "PhoneNumber", "UserName", "UserRoleId" },
+                values: new object[,]
+                {
+                    { 1, "remik007@gmail.com", "Test", "Admin", "admin", "123123123", "Admin", 2 },
+                    { 2, "remik0072@gmail.com", "Test", "User", "testuser", "1231231232", "TestUser", 1 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUsers_UserRoleId",
+                table: "AppUsers",
+                column: "UserRoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Participants_ReservationId",
@@ -190,9 +229,9 @@ namespace FocusAPI.Data.Migrations
                 column: "ReservationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_OwnerId1",
+                name: "IX_Reservations_OwnerId",
                 table: "Reservations",
-                column: "OwnerId1");
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_TripId",
@@ -230,6 +269,9 @@ namespace FocusAPI.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Trips");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "TransportTypes");
