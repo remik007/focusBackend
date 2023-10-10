@@ -99,6 +99,7 @@ namespace FocusAPI.Data
                 entity.Property(e => e.Birthday).IsRequired();
                 entity.Property(e => e.PhoneNumber).HasMaxLength(16);
                 entity.Property(e => e.DocumentNumber).HasMaxLength(255);
+                entity.Property(e => e.ReservationId).IsRequired();
             });
 
             modelBuilder.Entity<Reservation>(entity =>

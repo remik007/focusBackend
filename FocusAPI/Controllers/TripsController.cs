@@ -49,10 +49,10 @@ namespace FocusAPI.Controllers
             return trip;
         }
 
-        // PUT: api/Trips/5
+        // Patch: api/Trips/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTrip(int id, Trip trip)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchTrip(int id, Trip trip)
         {
             if (id != trip.Id)
             {
