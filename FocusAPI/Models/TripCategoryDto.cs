@@ -1,6 +1,6 @@
 ﻿namespace FocusAPI.Models
 {
-    public class TripTypeDto
+    public class TripCategoryDto
     {
         public string Name { get; set; }
     }

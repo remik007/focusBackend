@@ -22,24 +22,24 @@ namespace FocusAPI.Controllers
 
         // GET: api/TripTypes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TripType>>> GetTripTypes()
+        public async Task<ActionResult<IEnumerable<TripCategory>>> GetTripTypes()
         {
-          if (_context.TripTypes == null)
+          if (_context.TripCategories == null)
           {
               return NotFound();
           }
-            return await _context.TripTypes.ToListAsync();
+            return await _context.TripCategories.ToListAsync();
         }
 
         // GET: api/TripTypes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TripType>> GetTripType(int id)
+        public async Task<ActionResult<TripCategory>> GetTripType(int id)
         {
-          if (_context.TripTypes == null)
+          if (_context.TripCategories == null)
           {
               return NotFound();
           }
-            var tripType = await _context.TripTypes.FindAsync(id);
+            var tripType = await _context.TripCategories.FindAsync(id);
 
             if (tripType == null)
             {
@@ -52,7 +52,7 @@ namespace FocusAPI.Controllers
         // PUT: api/TripTypes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTripType(int id, TripType tripType)
+        public async Task<IActionResult> PutTripType(int id, TripCategory tripType)
         {
             if (id != tripType.Id)
             {
@@ -83,13 +83,13 @@ namespace FocusAPI.Controllers
         // POST: api/TripTypes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TripType>> PostTripType(TripType tripType)
+        public async Task<ActionResult<TripCategory>> PostTripType(TripCategory tripType)
         {
-          if (_context.TripTypes == null)
+          if (_context.TripCategories == null)
           {
               return Problem("Entity set 'FocusDbContext.TripTypes'  is null.");
           }
-            _context.TripTypes.Add(tripType);
+            _context.TripCategories.Add(tripType);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTripType", new { id = tripType.Id }, tripType);
@@ -99,17 +99,17 @@ namespace FocusAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTripType(int id)
         {
-            if (_context.TripTypes == null)
+            if (_context.TripCategories == null)
             {
                 return NotFound();
             }
-            var tripType = await _context.TripTypes.FindAsync(id);
+            var tripType = await _context.TripCategories.FindAsync(id);
             if (tripType == null)
             {
                 return NotFound();
             }
 
-            _context.TripTypes.Remove(tripType);
+            _context.TripCategories.Remove(tripType);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -117,7 +117,7 @@ namespace FocusAPI.Controllers
 
         private bool TripTypeExists(int id)
         {
-            return (_context.TripTypes?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.TripCategories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

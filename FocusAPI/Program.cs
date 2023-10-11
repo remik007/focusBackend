@@ -29,6 +29,7 @@ builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 builder.Services.AddSingleton<AuthenticationSettings>();
+builder.Services.AddScoped<FocusSeeder>();
 
 //Authentication
 builder.Services.AddAuthentication(option =>
@@ -49,6 +50,11 @@ builder.Services.AddAuthentication(option =>
 });
 
 var app = builder.Build();
+
+//Seeder
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<FocusSeeder>();
+seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

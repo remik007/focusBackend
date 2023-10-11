@@ -13,11 +13,12 @@
         public int TransportTypeId { get; set; }
         public virtual TransportType TransportType { get; set; }
         public string ImageUrl { get; set; }
-        public int TripTypeId { get; set; }
-        public virtual TripType TripType { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        public int TripCategoryId { get; set; }
+        public virtual TripCategory TripCategory { get; set; }
+        public DateOnly From { get; set; }
+        public DateOnly To { get; set; }
         public virtual List<Reservation> Reservations { get; set; }
+        public Boolean IsEnabled { get; set; } = false;
         public virtual int CurrentAvailableSeats
         {
             get

@@ -23,7 +23,7 @@ namespace FocusAPI.Services
         public Trip GetTrip(int id)
         {
             var trip = _context.Trips
-                .Include(t => t.TripType)
+                .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations)
                 .FirstOrDefault(t => t.Id == id);

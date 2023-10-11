@@ -3,7 +3,7 @@ using FocusAPI.Data;
 
 namespace FocusAPI.Models.Validators
 {
-    public class TripTypeDtoValidator : AbstractValidator<TripTypeDto>
+    public class TripTypeDtoValidator : AbstractValidator<TripCategoryDto>
     {
         public TripTypeDtoValidator(FocusDbContext dbContext)
         {

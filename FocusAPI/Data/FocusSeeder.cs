@@ -1,0 +1,207 @@
+﻿using FocusAPI.Data;
+using FocusAPI.Models;
+
+namespace FocusAPI.Data
+{
+    public class FocusSeeder
+    {
+        private readonly FocusDbContext _context;
+        public FocusSeeder(FocusDbContext dbContext)
+        {
+            _context = dbContext;
+        }
+        public void Seed()
+        {
+            if (_context.Database.CanConnect())
+            {
+                if (!_context.UserRoles.Any())
+                {
+                    var roles = GetRoles();
+                    _context.UserRoles.AddRange(roles);
+                    _context.SaveChanges();
+                }
+                if (!_context.AppUsers.Any())
+                {
+                    var users = GetUsers();
+                    _context.AppUsers.AddRange(users);
+                    _context.SaveChanges();
+                }
+                if (!_context.TripCategories.Any())
+                {
+                    var categories = GetTripCategories();
+                    _context.TripCategories.AddRange(categories);
+                    _context.SaveChanges();
+                }
+                if (!_context.TransportTypes.Any())
+                {
+                    var transportTypes = GetTransportTypes();
+                    _context.TransportTypes.AddRange(transportTypes);
+                    _context.SaveChanges();
+                }
+                if (!_context.Trips.Any())
+                {
+                    var trips = GetTrips();
+                    _context.Trips.AddRange(trips);
+                    _context.SaveChanges();
+                }
+                if (!_context.Reservations.Any())
+                {
+                    var reservations = GetReservations();
+                    _context.Reservations.AddRange(reservations);
+                    _context.SaveChanges();
+                }
+                if (!_context.Participants.Any())
+                {
+                    var participants = GetParticipants();
+                    _context.Participants.AddRange(participants);
+                    _context.SaveChanges();
+                }
+            }
+        }
+
+        private IEnumerable<UserRole> GetRoles()
+        {
+            var roles = new List<UserRole>()
+            {
+                new UserRole()
+                {
+                    Id = 1,
+                    Name = "User"
+                },
+                new UserRole()
+                {
+                    Id = 2,
+                    Name = "Admin"
+                }
+            };
+            return roles;
+        }
+
+        private IEnumerable<AppUser> GetUsers()
+        {
+            var users = new List<AppUser>()
+            {
+                new AppUser()
+                {
+                    UserName = "Admin",
+                    Password = "admin",
+                    FirstName = "Test",
+                    LastName = "Admin",
+                    PhoneNumber = "123123123",
+                    Email = "remik007@gmail.com",
+                    UserRoleId = 2
+                },
+                new AppUser()
+                {
+                    UserName = "TestUser",
+                    Password = "testuser",
+                    FirstName = "Test",
+                    LastName = "User",
+                    PhoneNumber = "1231231232",
+                    Email = "remik0072@gmail.com",
+                    UserRoleId = 1
+                }
+            };
+            return users;
+        }
+
+        private IEnumerable<TripCategory> GetTripCategories()
+        {
+            var categories = new List<TripCategory>()
+            {
+                new TripCategory()
+                {
+                    Name = "Wczasy"
+                },
+                new TripCategory()
+                {
+                    Name = "Pielgrzymki"
+                }
+            };
+            return categories;
+        }
+
+        private IEnumerable<TransportType> GetTransportTypes()
+        {
+            var transportTypes = new List<TransportType>()
+            {
+                new TransportType()
+                {
+                    Name = "Autokar"
+                },
+                new TransportType()
+                {
+                    Name = "Dojazd własny"
+                },
+                new TransportType()
+                {
+                    Name = "Samolot"
+                }
+            };
+            return transportTypes;
+        }
+
+        private IEnumerable<Trip> GetTrips()
+        {
+            var trips = new List<Trip>()
+            {
+                new Trip()
+                {
+                    ShortName = "Porto",
+                    Name = "Porto i Dolina Douro. Urokliwa architektura, klimatyczne uliczki, pyszne jedzenie i cudowni ludzie.",
+                    ShortDescription = "Krótki opis",
+                    Description = "Długi opis",
+                    Prize = "2190",
+                    OldPrize = "2390",
+                    AvailableSeats = 20,
+                    TransportTypeId = 1,
+                    ImageUrl = "",
+                    TripCategoryId = 1,
+                    From = new DateOnly(2023, 3, 19),
+                    To = new DateOnly(2023, 3, 22),
+                    IsEnabled = true
+                }
+            };
+            return trips;
+        }
+
+        private IEnumerable<Reservation> GetReservations()
+        {
+            var reservations = new List<Reservation>()
+            {
+                new Reservation()
+                {
+                    OwnerId = 2,
+                    TripId = 1
+                }
+            };
+            return reservations;
+        }
+
+        private IEnumerable<Participant> GetParticipants()
+        {
+            var participants = new List<Participant>()
+            {
+                new Participant()
+                {
+                    FirstName = "Adam",
+                    LastName = "Małysz",
+                    Birthday = new DateOnly(1992, 10, 10),
+                    DocumentNumber = "ASD123",
+                    PhoneNumber = "555666777",
+                    ReservationId = 1
+                },
+                new Participant()
+                {
+                    FirstName = "Iza",
+                    LastName = "Małysz",
+                    Birthday = new DateOnly(1995, 12, 22),
+                    DocumentNumber = "ASD111",
+                    PhoneNumber = "555444333",
+                    ReservationId = 1
+                }
+            };
+            return participants;
+        }
+    }
+}

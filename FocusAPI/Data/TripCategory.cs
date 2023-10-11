@@ -1,6 +1,6 @@
 ﻿namespace FocusAPI.Data
 {
-    public class TripType
+    public class TripCategory
     {
         public int Id { get; set; }
         public string Name { get; set; }

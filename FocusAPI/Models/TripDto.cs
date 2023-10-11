@@ -15,10 +15,11 @@ namespace FocusAPI.Models
         public virtual TransportTypeDto TransportType { get; set; }
         public string ImageUrl { get; set; }
         public int TripTypeId { get; set; }
-        public virtual TripTypeDto TripType { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        public virtual TripCategoryDto TripCategory { get; set; }
+        public DateOnly From { get; set; }
+        public DateOnly To { get; set; }
         public virtual List<ReservationDto> Reservations { get; set; }
+        public Boolean IsEnabled { get; set; } = false;
         public virtual int CurrentAvailableSeats
         {
             get
