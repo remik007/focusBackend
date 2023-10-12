@@ -23,6 +23,7 @@ namespace FocusAPI.Services
         IEnumerable<SubPageDto> GetAllSubPages();
         IEnumerable<TransportTypeDto> GetAllTransportTypes();
         IEnumerable<TripDto> GetAllTrips();
+        IEnumerable<AppUserDto> GetUsers();
         TripCategoryDto GetCategoryById(int id);
         ContactDto GetContact();
         ReservationDto GetReservationById(int id);
@@ -374,6 +375,15 @@ namespace FocusAPI.Services
             _context.TransportTypes.Remove(type);
             _context.SaveChanges();
 
+        }
+
+        //Users---------------------------------------------------------------------------------------------------
+        public IEnumerable<AppUserDto> GetUsers()
+        {
+            var users = _context.AppUsers.ToList();
+
+            var userDtos = _mapper.Map<List<AppUserDto>>(users);
+            return userDtos;
         }
     }
 }

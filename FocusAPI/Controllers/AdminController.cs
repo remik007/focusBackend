@@ -207,7 +207,7 @@ namespace FocusAPI.Controllers
             return Created($"/api/admin/categories/{tripCategoryId}", null);
         }
 
-        //TripTypes---------------------------------------------------------------------------------------------------------
+        //TransportTypes---------------------------------------------------------------------------------------------------------
         // GET: api/Admin/TransportTypes
         [HttpGet("transporttypes")]
         public ActionResult<IEnumerable<TransportTypeDto>> GetAllTransportTypes()
@@ -246,6 +246,15 @@ namespace FocusAPI.Controllers
         {
             var typeId = _adminService.UpdateTransportType(id, typeDto);
             return Created($"/api/admin/transporttypes/{typeId}", null);
+        }
+
+        //Users---------------------------------------------------------------------------------------------------------
+        // GET: api/Admin/Users
+        [HttpGet("users")]
+        public ActionResult<IEnumerable<TransportTypeDto>> GetUsers()
+        {
+            var userDtos = _adminService.GetUsers();
+            return Ok(userDtos);
         }
     }
 }
