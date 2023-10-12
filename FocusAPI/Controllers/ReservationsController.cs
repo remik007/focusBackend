@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FocusAPI.Data;
 using FocusAPI.Services;
 using FocusAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FocusAPI.Controllers
 {
@@ -24,6 +25,7 @@ namespace FocusAPI.Controllers
 
         // GET: api/Reservations
         [HttpGet]
+        [Authorize]
         public ActionResult<IEnumerable<ReservationDto>> GetAll()
         {
             var reservationDtos = _reservationService.GetAll();
@@ -32,6 +34,7 @@ namespace FocusAPI.Controllers
 
         // GET: api/Reservations/5
         [HttpGet("{id}")]
+        [Authorize]
         public ActionResult<ReservationDto> GetById([FromRoute] int id)
         {
             var reservationDto = _reservationService.GetById(id);
@@ -40,6 +43,7 @@ namespace FocusAPI.Controllers
 
         // POST: api/Reservations/5
         [HttpPost("{id}")]
+        [Authorize]
         public ActionResult<ReservationDto> Create([FromBody] ReservationDto reservationDto)
         {
             var reservationId = _reservationService.Create(reservationDto);
