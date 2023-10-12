@@ -17,12 +17,14 @@ namespace FocusAPI.Services
         private readonly FocusDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
+        private readonly AppConfig _appConfig;
 
-        public ReservationService(FocusDbContext context, IMapper mapper, IUserContextService userContextService)
+        public ReservationService(FocusDbContext context, IMapper mapper, IUserContextService userContextService, AppConfig appConfig)
         {
             _context = context;
             _mapper = mapper;
             _userContextService = userContextService;
+            _appConfig = appConfig;
         }
 
         public ReservationDto GetById(int id)
@@ -40,10 +42,15 @@ namespace FocusAPI.Services
 
         public IEnumerable<ReservationDto> GetAll()
         {
+
             var reservations = _context.Reservations
-                .Include(x => x.Participants)
-                .Where(x => x.OwnerId == _userContextService.GetUserId)
-                .ToList();
+                            .Include(x => x.Participants)
+                            .Where(x =>
+                                x.OwnerId == _userContextService.GetUserId
+                                && x.To.AddDays(_appConfig.ReservationRetentionPeriodDays) > DateTime.Now)
+                            .OrderByDescending(x => x.From)
+                            .ToList();
+
             var reservationDtos = _mapper.Map<List<ReservationDto>>(reservations);
             return reservationDtos;
         }

@@ -8,6 +8,8 @@
         public int TripId { get; set; } 
         public virtual Trip Trip { get; set; }
         public virtual List<Participant> Participants { get; set; }
-        
+        public virtual DateTime From { get { return Trip.From; } }
+        public virtual DateTime To { get { return Trip.To; } }
+
     }
 }
