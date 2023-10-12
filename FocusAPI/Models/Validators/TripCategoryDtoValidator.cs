@@ -3,9 +3,9 @@ using FocusAPI.Data;
 
 namespace FocusAPI.Models.Validators
 {
-    public class TripTypeDtoValidator : AbstractValidator<TripCategoryDto>
+    public class TripCategoryDtoValidator : AbstractValidator<TripCategoryDto>
     {
-        public TripTypeDtoValidator(FocusDbContext dbContext)
+        public TripCategoryDtoValidator(FocusDbContext dbContext)
         {
             RuleFor(x => x.Name)
                 .NotEmpty();

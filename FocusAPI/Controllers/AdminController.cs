@@ -206,5 +206,46 @@ namespace FocusAPI.Controllers
             var tripCategoryId = _adminService.UpdateCategory(id, tripCategoryDto);
             return Created($"/api/admin/categories/{tripCategoryId}", null);
         }
+
+        //TripTypes---------------------------------------------------------------------------------------------------------
+        // GET: api/Admin/TransportTypes
+        [HttpGet("transporttypes")]
+        public ActionResult<IEnumerable<TransportTypeDto>> GetAllTransportTypes()
+        {
+            var typeDtos = _adminService.GetAllTransportTypes();
+            return Ok(typeDtos);
+        }
+
+        // GET: api/Admin/TransportTypes/5
+        [HttpGet("transporttypes/{id}")]
+        public ActionResult<TransportTypeDto> GetTransportTypeById([FromRoute] int id)
+        {
+            var typeDto = _adminService.GetTransportTypeById(id);
+            return Ok(typeDto);
+        }
+
+        // POST: api/Admin/TransportTypes
+        [HttpPost("transporttypes")]
+        public ActionResult<TransportTypeDto> CreateTransportType([FromBody] TransportTypeDto typeDto)
+        {
+            var typeId = _adminService.CreateTransportType(typeDto);
+            return Created($"/api/admin/transporttypes/{typeId}", null);
+        }
+
+        // DELETE: api/Admin/TransportTypes/5
+        [HttpDelete("transporttypes/{id}")]
+        public ActionResult<TransportTypeDto> DeleteTransportType([FromRoute] int id)
+        {
+            _adminService.DeleteTransportType(id);
+            return Created($"/api/admin/transporttypes", null);
+        }
+
+        // PUT: api/Admin/TransportTypes/5
+        [HttpPut("transporttypes/{id}")]
+        public ActionResult<TransportTypeDto> UpdateTransportType([FromRoute] int id, [FromBody] TransportTypeDto typeDto)
+        {
+            var typeId = _adminService.UpdateTransportType(id, typeDto);
+            return Created($"/api/admin/transporttypes/{typeId}", null);
+        }
     }
 }

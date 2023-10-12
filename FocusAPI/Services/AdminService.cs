@@ -11,24 +11,29 @@ namespace FocusAPI.Services
         int CreateCategory(TripCategoryDto tripCategoryDto);
         int CreateReservation(ReservationDto reservationDto);
         int CreateSubPage(SubPageDto subPageDto);
+        int CreateTransportType(TransportTypeDto typeDto);
         int CreateTrip(TripDto tripDto);
         void DeleteCategory(int id);
         void DeleteReservation(int id);
         void DeleteSubPage(int id);
+        void DeleteTransportType(int id);
         void DeleteTrip(int id);
         IEnumerable<TripCategoryDto> GetAllCategories();
         IEnumerable<ReservationDto> GetAllReservations();
         IEnumerable<SubPageDto> GetAllSubPages();
+        IEnumerable<TransportTypeDto> GetAllTransportTypes();
         IEnumerable<TripDto> GetAllTrips();
         TripCategoryDto GetCategoryById(int id);
         ContactDto GetContact();
         ReservationDto GetReservationById(int id);
         SubPageDto GetSubPageById(int id);
         TripDto GetTripById(int id);
+        TransportTypeDto GetTransportTypeById(int id);
         int UpdateCategory(int id, TripCategoryDto tripCategoryDto);
         int UpdateContact(ContactDto contactDto);
         int UpdateReservation(int id, ReservationDto reservationDto);
         int UpdateSubPage(int id, SubPageDto subPageDto);
+        int UpdateTransportType(int id, TransportTypeDto typeDto);
         int UpdateTrip(int id, TripDto tripDto);
     }
     public class AdminService : IAdminService
@@ -313,6 +318,60 @@ namespace FocusAPI.Services
                 throw new NotFoundException("Category not found");
 
             _context.TripCategories.Remove(tripCategory);
+            _context.SaveChanges();
+
+        }
+
+        //TransportTypes---------------------------------------------------------------------------------------------------
+        public TransportTypeDto GetTransportTypeById(int id)
+        {
+            var type = _context.TransportTypes.FirstOrDefault(t => t.Id == id);
+
+            if (type == null)
+                throw new NotFoundException("Transport Type not found");
+
+            var typeDto = _mapper.Map<TransportTypeDto>(type);
+            return typeDto;
+        }
+
+        public IEnumerable<TransportTypeDto> GetAllTransportTypes()
+        {
+            var types = _context.TransportTypes.ToList();
+
+            var typeDtos = _mapper.Map<List<TransportTypeDto>>(types);
+            return typeDtos;
+        }
+
+        public int CreateTransportType(TransportTypeDto typeDto)
+        {
+            var type = _mapper.Map<TransportType>(typeDto);
+            _context.TransportTypes.Add(type);
+            _context.SaveChanges();
+            return type.Id;
+        }
+
+        public int UpdateTransportType(int id, TransportTypeDto typeDto)
+        {
+            var type = _context.TransportTypes.FirstOrDefault(x => x.Id == id);
+
+            if (type == null)
+                throw new NotFoundException("Transport Type not found");
+
+            var updateType = _mapper.Map<TransportType>(typeDto);
+            _context.TransportTypes.Update(updateType);
+            _context.SaveChanges();
+
+            return type.Id;
+        }
+
+        public void DeleteTransportType(int id)
+        {
+            var type = _context.TransportTypes.FirstOrDefault(x => x.Id == id);
+
+            if (type == null)
+                throw new NotFoundException("Transport Type not found");
+
+            _context.TransportTypes.Remove(type);
             _context.SaveChanges();
 
         }
