@@ -160,8 +160,8 @@ namespace FocusAPI.Data
                     TransportTypeId = 1,
                     ImageUrl = "",
                     TripCategoryId = 1,
-                    From = new DateOnly(2023, 3, 19),
-                    To = new DateOnly(2023, 3, 22),
+                    From = new DateTime(2023, 3, 19),
+                    To = new DateTime(2023, 3, 22),
                     IsEnabled = true
                 }
             };
@@ -183,13 +183,14 @@ namespace FocusAPI.Data
 
         private IEnumerable<Participant> GetParticipants()
         {
+            DateTime test = DateTime.Parse("1992-10-10");
             var participants = new List<Participant>()
             {
                 new Participant()
                 {
                     FirstName = "Adam",
                     LastName = "Małysz",
-                    Birthday = new DateOnly(1992, 10, 10),
+                    Birthday = new DateTime(1992, 10, 20),
                     DocumentNumber = "ASD123",
                     PhoneNumber = "555666777",
                     ReservationId = 1
@@ -198,7 +199,7 @@ namespace FocusAPI.Data
                 {
                     FirstName = "Iza",
                     LastName = "Małysz",
-                    Birthday = new DateOnly(1995, 12, 22),
+                    Birthday = new DateTime(1995, 12, 22),
                     DocumentNumber = "ASD111",
                     PhoneNumber = "555444333",
                     ReservationId = 1

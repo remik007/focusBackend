@@ -15,8 +15,8 @@
         public string ImageUrl { get; set; }
         public int TripCategoryId { get; set; }
         public virtual TripCategory TripCategory { get; set; }
-        public DateOnly From { get; set; }
-        public DateOnly To { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
         public virtual List<Reservation> Reservations { get; set; }
         public Boolean IsEnabled { get; set; } = false;
     }
