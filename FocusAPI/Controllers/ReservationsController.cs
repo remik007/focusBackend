@@ -14,6 +14,7 @@ namespace FocusAPI.Controllers
 {
     [Route("api/reservations")]
     [ApiController]
+    [Authorize]
     public class ReservationsController : ControllerBase
     {
         private readonly IReservationService _reservationService;
@@ -25,7 +26,6 @@ namespace FocusAPI.Controllers
 
         // GET: api/Reservations
         [HttpGet]
-        [Authorize]
         public ActionResult<IEnumerable<ReservationDto>> GetAll()
         {
             var reservationDtos = _reservationService.GetAll();
@@ -34,7 +34,6 @@ namespace FocusAPI.Controllers
 
         // GET: api/Reservations/5
         [HttpGet("{id}")]
-        [Authorize]
         public ActionResult<ReservationDto> GetById([FromRoute] int id)
         {
             var reservationDto = _reservationService.GetById(id);
@@ -43,7 +42,6 @@ namespace FocusAPI.Controllers
 
         // POST: api/Reservations/5
         [HttpPost("{id}")]
-        [Authorize]
         public ActionResult<ReservationDto> Create([FromBody] ReservationDto reservationDto)
         {
             var reservationId = _reservationService.Create(reservationDto);
