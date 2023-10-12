@@ -7,6 +7,7 @@ namespace FocusAPI.Services
         ClaimsPrincipal User { get; }
         int? GetUserId { get; }
         Boolean IsAdmin { get; }
+    }
     public class UserContextService : IUserContextService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
