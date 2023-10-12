@@ -6,118 +6,38 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FocusAPI.Data;
+using FocusAPI.Services;
+using FocusAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FocusAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/trips")]
     [ApiController]
     public class TripsController : ControllerBase
     {
-        private readonly FocusDbContext _context;
+        private readonly ITripService _tripService;
 
-        public TripsController(FocusDbContext context)
+        public TripsController(ITripService tripService)
         {
-            _context = context;
+            _tripService = tripService;
         }
 
         // GET: api/Trips
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Trip>>> GetTrips()
+        public ActionResult<IEnumerable<TripDto>> GetAll()
         {
-          if (_context.Trips == null)
-          {
-              return NotFound();
-          }
-            return await _context.Trips.ToListAsync();
+            var tripDtos = _tripService.GetAll();
+            return Ok(tripDtos);
         }
 
         // GET: api/Trips/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Trip>> GetTrip(int id)
+        public ActionResult<TripDto> GetById([FromRoute] int id)
         {
-          if (_context.Trips == null)
-          {
-              return NotFound();
-          }
-            var trip = await _context.Trips.FindAsync(id);
-
-            if (trip == null)
-            {
-                return NotFound();
-            }
-
-            return trip;
+            var tripDto = _tripService.GetById(id);
+            return Ok(tripDto);
         }
 
-        // Patch: api/Trips/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchTrip(int id, Trip trip)
-        {
-            if (id != trip.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(trip).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TripExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Trips
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Trip>> PostTrip(Trip trip)
-        {
-          if (_context.Trips == null)
-          {
-              return Problem("Entity set 'FocusDbContext.Trips'  is null.");
-          }
-            _context.Trips.Add(trip);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTrip", new { id = trip.Id }, trip);
-        }
-
-        // DELETE: api/Trips/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTrip(int id)
-        {
-            if (_context.Trips == null)
-            {
-                return NotFound();
-            }
-            var trip = await _context.Trips.FindAsync(id);
-            if (trip == null)
-            {
-                return NotFound();
-            }
-
-            _context.Trips.Remove(trip);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool TripExists(int id)
-        {
-            return (_context.Trips?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

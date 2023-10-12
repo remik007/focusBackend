@@ -24,11 +24,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FocusDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
-builder.Services.AddSingleton<AuthenticationSettings>();
+builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddScoped<FocusSeeder>();
 
 //Authentication

@@ -19,13 +19,5 @@
         public DateOnly To { get; set; }
         public virtual List<Reservation> Reservations { get; set; }
         public Boolean IsEnabled { get; set; } = false;
-        public virtual int CurrentAvailableSeats
-        {
-            get
-            {
-                int reservationsCount = Reservations.Sum(x => x.Participants.Count);
-                return AvailableSeats - reservationsCount;
-            }
-        }
     }
 }

@@ -36,7 +36,7 @@ namespace FocusAPI.Services
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 PhoneNumber = dto.PhoneNumber,
-                UserRoleId = dto.RoleId
+                UserRoleId = dto.UserRoleId
             };
             var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
             newUser.Password = hashedPassword;

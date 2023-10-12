@@ -1,14 +1,18 @@
-﻿using FocusAPI.Data;
+﻿using AutoMapper;
+using FocusAPI.Data;
 using FocusAPI.Models;
+using FocusAPI.Services;
 
 namespace FocusAPI.Data
 {
     public class FocusSeeder
     {
         private readonly FocusDbContext _context;
-        public FocusSeeder(FocusDbContext dbContext)
+        private readonly IAccountService _accountService;
+        public FocusSeeder(FocusDbContext dbContext, IAccountService accountService)
         {
             _context = dbContext;
+            _accountService = accountService;
         }
         public void Seed()
         {
@@ -23,8 +27,7 @@ namespace FocusAPI.Data
                 if (!_context.AppUsers.Any())
                 {
                     var users = GetUsers();
-                    _context.AppUsers.AddRange(users);
-                    _context.SaveChanges();
+                    users.ForEach(x => _accountService.RegisterUser(x));
                 }
                 if (!_context.TripCategories.Any())
                 {
@@ -77,11 +80,11 @@ namespace FocusAPI.Data
             return roles;
         }
 
-        private IEnumerable<AppUser> GetUsers()
+        private List<RegisterUserDto> GetUsers()
         {
-            var users = new List<AppUser>()
+            var users = new List<RegisterUserDto>()
             {
-                new AppUser()
+                new RegisterUserDto()
                 {
                     UserName = "Admin",
                     Password = "admin",
@@ -91,7 +94,7 @@ namespace FocusAPI.Data
                     Email = "remik007@gmail.com",
                     UserRoleId = 2
                 },
-                new AppUser()
+                new RegisterUserDto()
                 {
                     UserName = "TestUser",
                     Password = "testuser",
