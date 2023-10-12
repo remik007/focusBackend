@@ -46,7 +46,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .Where(t => t.IsEnabled == true)
+                .Where(t => t.IsEnabled == true && t.To > DateTime.Now)
                 .ToList();
 
             var tripDtos = _mapper.Map<List<TripDto>>(trips);
