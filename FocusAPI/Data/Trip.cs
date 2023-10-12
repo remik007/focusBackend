@@ -19,5 +19,6 @@
         public DateTime To { get; set; }
         public virtual List<Reservation> Reservations { get; set; }
         public Boolean IsEnabled { get; set; } = false;
+        public Boolean IsDeleted { get; set; }
     }
 }

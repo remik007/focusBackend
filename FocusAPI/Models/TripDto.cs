@@ -20,6 +20,7 @@ namespace FocusAPI.Models
         public DateTime To { get; set; }
         public virtual List<ReservationDto> Reservations { get; set; }
         public Boolean IsEnabled { get; set; } = false;
-        public int CurrentAvailableSeats { get; set; } 
+        public int CurrentAvailableSeats { get; set; }
+        public Boolean IsDeleted { get; set; }
     }
 }

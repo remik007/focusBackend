@@ -8,6 +8,16 @@ namespace FocusAPI.Services
 {
     public interface IAdminService
     {
+        int CreateReservation(ReservationDto reservationDto);
+        int CreateTrip(TripDto tripDto);
+        void DeleteReservation(int id);
+        void DeleteTrip(int id);
+        IEnumerable<ReservationDto> GetAllReservations();
+        IEnumerable<TripDto> GetAllTrips();
+        ReservationDto GetReservationById(int id);
+        TripDto GetTripById(int id);
+        int UpdateReservation(int id, ReservationDto reservationDto);
+        int UpdateTrip(int id, TripDto reservationDto);
     }
     public class AdminService : IAdminService
     {
@@ -24,7 +34,7 @@ namespace FocusAPI.Services
             _appConfig = appConfig;
         }
 
-        //Reservations
+        //Reservations-------------------------------------------------------------------------------------------
         public ReservationDto GetReservationById(int id)
         {
             var reservation = _context.Reservations
@@ -96,6 +106,68 @@ namespace FocusAPI.Services
             _context.SaveChanges();
         }
 
-        //
+        //Trips---------------------------------------------------------------------------------------------------
+        public TripDto GetTripById(int id)
+        {
+            var trip = _context.Trips
+                .Include(t => t.TripCategory)
+                .Include(t => t.TransportType)
+                .Include(t => t.Reservations).ThenInclude(c => c.Participants)
+                .FirstOrDefault(t => t.Id == id);
+
+            if (trip == null)
+                throw new NotFoundException("Trip not found");
+
+            var tripDto = _mapper.Map<TripDto>(trip);
+            return tripDto;
+        }
+
+        public IEnumerable<TripDto> GetAllTrips()
+        {
+            var trips = _context.Trips
+                .Include(t => t.TripCategory)
+                .Include(t => t.TransportType)
+                .Include(t => t.Reservations).ThenInclude(c => c.Participants)
+                .OrderByDescending(t => t.From)
+                .ToList();
+
+            var tripDtos = _mapper.Map<List<TripDto>>(trips);
+            return tripDtos;
+        }
+
+        public int CreateTrip(TripDto tripDto)
+        {
+            var trip = _mapper.Map<Trip>(tripDto);
+            _context.Trips.Add(trip);
+            _context.SaveChanges();
+            return trip.Id;
+        }
+
+        public int UpdateTrip(int id, TripDto reservationDto)
+        {
+            var trip = _context.Trips.FirstOrDefault(x => x.Id == id);
+
+            if (trip == null)
+                throw new NotFoundException("Trip not found");
+
+            var updatedTrip = _mapper.Map<Trip>(reservationDto);
+            _context.Trips.Update(updatedTrip);
+            _context.SaveChanges();
+
+            return trip.Id;
+        }
+
+        public void DeleteTrip(int id)
+        {
+            var trip = _context.Trips.FirstOrDefault(x => x.Id == id);
+
+            if (trip == null)
+                throw new NotFoundException("Trip not found");
+
+            trip.IsDeleted = true;
+            _context.Trips.Update(trip);
+            _context.SaveChanges();
+
+        }
     }
 }
