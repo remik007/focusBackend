@@ -11,5 +11,8 @@ namespace FocusAPI.Models
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public virtual List<ParticipantDto> Participants { get; set; }
+        public DateTime DateCreated { get; set; }
+        public Boolean IsConfirmed { get; set; }
+        public Boolean IsPaid { get; set; }
     }
 }

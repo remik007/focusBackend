@@ -11,5 +11,9 @@
         public virtual DateTime From { get { return Trip.From; } }
         public virtual DateTime To { get { return Trip.To; } }
 
+        public DateTime DateCreated { get; set; }
+        public Boolean IsConfirmed { get; set; }
+        public Boolean IsPaid { get; set; }
+
     }
 }

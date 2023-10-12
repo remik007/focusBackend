@@ -175,7 +175,10 @@ namespace FocusAPI.Data
                 new Reservation()
                 {
                     OwnerId = 2,
-                    TripId = 1
+                    TripId = 1,
+                    DateCreated = DateTime.Now,
+                    IsConfirmed = true,
+                    IsPaid = false
                 }
             };
             return reservations;
