@@ -9,17 +9,22 @@ namespace FocusAPI.Services
     public interface IAdminService
     {
         int CreateReservation(ReservationDto reservationDto);
+        int CreateSubPage(SubPageDto subPageDto);
         int CreateTrip(TripDto tripDto);
         void DeleteReservation(int id);
+        void DeleteSubPage(int id);
         void DeleteTrip(int id);
         IEnumerable<ReservationDto> GetAllReservations();
+        IEnumerable<SubPageDto> GetAllSubPages();
         IEnumerable<TripDto> GetAllTrips();
         ReservationDto GetReservationById(int id);
+        SubPageDto GetSubPageById(int id);
         TripDto GetTripById(int id);
         int UpdateReservation(int id, ReservationDto reservationDto);
-        int UpdateTrip(int id, TripDto reservationDto);
+        int UpdateSubPage(int id, SubPageDto subPageDto);
+        int UpdateTrip(int id, TripDto tripDto);
     }
-    public class AdminService : IAdminService
+        public class AdminService : IAdminService
     {
         private readonly FocusDbContext _context;
         private readonly IMapper _mapper;
@@ -143,14 +148,14 @@ namespace FocusAPI.Services
             return trip.Id;
         }
 
-        public int UpdateTrip(int id, TripDto reservationDto)
+        public int UpdateTrip(int id, TripDto tripDto)
         {
             var trip = _context.Trips.FirstOrDefault(x => x.Id == id);
 
             if (trip == null)
                 throw new NotFoundException("Trip not found");
 
-            var updatedTrip = _mapper.Map<Trip>(reservationDto);
+            var updatedTrip = _mapper.Map<Trip>(tripDto);
             _context.Trips.Update(updatedTrip);
             _context.SaveChanges();
 
@@ -166,6 +171,60 @@ namespace FocusAPI.Services
 
             trip.IsDeleted = true;
             _context.Trips.Update(trip);
+            _context.SaveChanges();
+
+        }
+
+        //SubPages---------------------------------------------------------------------------------------------------
+        public SubPageDto GetSubPageById(int id)
+        {
+            var subpage = _context.SubPages.FirstOrDefault(t => t.Id == id);
+
+            if (subpage == null)
+                throw new NotFoundException("SubPage not found");
+
+            var subPageDto = _mapper.Map<SubPageDto>(subpage);
+            return subPageDto;
+        }
+
+        public IEnumerable<SubPageDto> GetAllSubPages()
+        {
+            var subPages = _context.SubPages.ToList();
+
+            var subPageDtos = _mapper.Map<List<SubPageDto>>(subPages);
+            return subPageDtos;
+        }
+
+        public int CreateSubPage(SubPageDto subPageDto)
+        {
+            var subPage = _mapper.Map<SubPage>(subPageDto);
+            _context.SubPages.Add(subPage);
+            _context.SaveChanges();
+            return subPage.Id;
+        }
+
+        public int UpdateSubPage(int id, SubPageDto subPageDto)
+        {
+            var subPage = _context.SubPages.FirstOrDefault(x => x.Id == id);
+
+            if (subPage == null)
+                throw new NotFoundException("SubPage not found");
+
+            var updatedSubPage = _mapper.Map<SubPage>(subPageDto);
+            _context.SubPages.Update(updatedSubPage);
+            _context.SaveChanges();
+
+            return subPage.Id;
+        }
+
+        public void DeleteSubPage(int id)
+        {
+            var subPage = _context.SubPages.FirstOrDefault(x => x.Id == id);
+
+            if (subPage == null)
+                throw new NotFoundException("SubPage not found");
+
+            _context.SubPages.Remove(subPage);
             _context.SaveChanges();
 
         }

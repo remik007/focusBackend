@@ -42,15 +42,15 @@ namespace FocusAPI.Controllers
             return Ok(reservationDto);
         }
 
-        // POST: api/Admin/Reservations/5
-        [HttpPost("reservations/{id}")]
+        // POST: api/Admin/Reservations
+        [HttpPost("reservations")]
         public ActionResult<ReservationDto> CreateReservation([FromBody] ReservationDto reservationDto)
         {
             var reservationId = _adminService.CreateReservation(reservationDto);
             return Created($"/api/admin/reservations/{reservationId}", null);
         }
 
-        // POST: api/Admin/Reservations/5
+        // DELETE: api/Admin/Reservations/5
         [HttpDelete("reservations/{id}")]
         public ActionResult<ReservationDto> DeleteReservation([FromRoute] int id)
         {
@@ -58,7 +58,7 @@ namespace FocusAPI.Controllers
             return Created($"/api/admin/reservations", null);
         }
 
-        // POST: api/Admin/Reservations/5
+        // PUT: api/Admin/Reservations/5
         [HttpPut("reservations/{id}")]
         public ActionResult<ReservationDto> UpdateReservation([FromRoute] int id, [FromBody] ReservationDto reservationDto)
         {
@@ -84,15 +84,15 @@ namespace FocusAPI.Controllers
             return Ok(tripDto);
         }
 
-        // POST: api/Admin/Trips/5
-        [HttpPost("trips/{id}")]
+        // POST: api/Admin/Trips
+        [HttpPost("trips")]
         public ActionResult<TripDto> CreateTrip([FromBody] TripDto tripDto)
         {
             var tripId = _adminService.CreateTrip(tripDto);
             return Created($"/api/admin/trips/{tripId}", null);
         }
 
-        // POST: api/Admin/Trips/5
+        // DELETE: api/Admin/Trips/5
         [HttpDelete("trips/{id}")]
         public ActionResult<TripDto> DeleteTrip([FromRoute] int id)
         {
@@ -100,12 +100,53 @@ namespace FocusAPI.Controllers
             return Created($"/api/admin/trips", null);
         }
 
-        // POST: api/Admin/Trips/5
+        // PUT: api/Admin/Trips/5
         [HttpPut("{id}")]
-        public ActionResult<ReservationDto> UpdateTrip([FromRoute] int id, [FromBody] TripDto tripDto)
+        public ActionResult<TripDto> UpdateTrip([FromRoute] int id, [FromBody] TripDto tripDto)
         {
             var tripId = _adminService.UpdateTrip(id, tripDto);
             return Created($"/api/admin/trips/{tripId}", null);
+        }
+
+        //SubPages---------------------------------------------------------------------------------------------------------
+        // GET: api/Admin/SubPages
+        [HttpGet("subpages")]
+        public ActionResult<IEnumerable<SubPageDto>> GetAllSubPages()
+        {
+            var subPageDtos = _adminService.GetAllSubPages();
+            return Ok(subPageDtos);
+        }
+
+        // GET: api/Admin/SubPages/5
+        [HttpGet("subpages/{id}")]
+        public ActionResult<SubPageDto> GetSubPageById([FromRoute] int id)
+        {
+            var subPageDto = _adminService.GetSubPageById(id);
+            return Ok(subPageDto);
+        }
+
+        // POST: api/Admin/SubPages
+        [HttpPost("subpages")]
+        public ActionResult<SubPageDto> CreateSubPage([FromBody] SubPageDto subPageDto)
+        {
+            var subPageId = _adminService.CreateSubPage(subPageDto);
+            return Created($"/api/admin/subpages/{subPageId}", null);
+        }
+
+        // DELETE: api/Admin/SubPages/5
+        [HttpDelete("subpages/{id}")]
+        public ActionResult<SubPageDto> DeleteSubPage([FromRoute] int id)
+        {
+            _adminService.DeleteSubPage(id);
+            return Created($"/api/admin/subpages", null);
+        }
+
+        // PUT: api/Admin/SubPages/5
+        [HttpPut("subpages/{id}")]
+        public ActionResult<SubPageDto> UpdateTrip([FromRoute] int id, [FromBody] SubPageDto subPageDto)
+        {
+            var subPageId = _adminService.UpdateSubPage(id, subPageDto);
+            return Created($"/api/admin/subpages/{subPageId}", null);
         }
     }
 }

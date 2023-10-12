@@ -22,7 +22,7 @@ namespace FocusAPI.Controllers
             _subpageService = subpageService;
         }
 
-        // GET: api/Categories
+        // GET: api/SubPages
         [HttpGet]
         public ActionResult<IEnumerable<SubPageDto>> GetAll()
         {
@@ -30,7 +30,7 @@ namespace FocusAPI.Controllers
             return Ok(subPageDtos);
         }
 
-        // GET: api/Categories/5
+        // GET: api/SubPages/5
         [HttpGet("{id}")]
         public ActionResult<SubPageDto> GetById([FromRoute] int id)
         {
