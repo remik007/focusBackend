@@ -24,6 +24,7 @@ namespace FocusAPI.Services
             _appConfig = appConfig;
         }
 
+        //Reservations
         public ReservationDto GetReservationById(int id)
         {
             var reservation = _context.Reservations
@@ -74,6 +75,13 @@ namespace FocusAPI.Services
             var updatedReservation = _mapper.Map<Reservation>(reservationDto);
             _context.Reservations.Update(updatedReservation);
             _context.SaveChanges();
+
+            updatedReservation.Participants.ForEach(x =>
+            {
+                _context.Participants.Update(x);
+                _context.SaveChanges();
+            });
+
             return reservation.Id;
         }
 
@@ -87,5 +95,7 @@ namespace FocusAPI.Services
             _context.Reservations.Remove(reservation);
             _context.SaveChanges();
         }
+
+        //
     }
 }
