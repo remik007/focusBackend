@@ -6,118 +6,44 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FocusAPI.Data;
+using FocusAPI.Services;
+using FocusAPI.Models;
 
 namespace FocusAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/reservations")]
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly FocusDbContext _context;
+        private readonly IReservationService _reservationService;
 
-        public ReservationsController(FocusDbContext context)
+        public ReservationsController(IReservationService reservationService)
         {
-            _context = context;
+            _reservationService = reservationService;
         }
 
         // GET: api/Reservations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations()
+        public ActionResult<IEnumerable<ReservationDto>> GetAll()
         {
-          if (_context.Reservations == null)
-          {
-              return NotFound();
-          }
-            return await _context.Reservations.ToListAsync();
+            var reservationDtos = _reservationService.GetAll();
+            return Ok(reservationDtos);
         }
 
         // GET: api/Reservations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Reservation>> GetReservation(int id)
+        public ActionResult<ReservationDto> GetById([FromRoute] int id)
         {
-          if (_context.Reservations == null)
-          {
-              return NotFound();
-          }
-            var reservation = await _context.Reservations.FindAsync(id);
-
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return reservation;
+            var reservationDto = _reservationService.GetById(id);
+            return Ok(reservationDto);
         }
 
-        // PUT: api/Reservations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation(int id, Reservation reservation)
+        // POST: api/Reservations/5
+        [HttpPost("{id}")]
+        public ActionResult<ReservationDto> Create([FromBody] ReservationDto reservationDto)
         {
-            if (id != reservation.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(reservation).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReservationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Reservations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
-        {
-          if (_context.Reservations == null)
-          {
-              return Problem("Entity set 'FocusDbContext.Reservations'  is null.");
-          }
-            _context.Reservations.Add(reservation);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
-        }
-
-        // DELETE: api/Reservations/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReservation(int id)
-        {
-            if (_context.Reservations == null)
-            {
-                return NotFound();
-            }
-            var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            _context.Reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ReservationExists(int id)
-        {
-            return (_context.Reservations?.Any(e => e.Id == id)).GetValueOrDefault();
+            var reservationId = _reservationService.Create(reservationDto);
+            return Created($"/api/reservations/{reservationId}", null);
         }
     }
 }

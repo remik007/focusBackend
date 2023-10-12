@@ -11,7 +11,7 @@ using FocusAPI.Services;
 
 namespace FocusAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/contacts")]
     [ApiController]
     public class ContactsController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace FocusAPI.Controllers
             _contactService = contactService;
         }
 
-        // GET: api/Categories/5
+        // GET: api/Contacts/5
         [HttpGet]
         public ActionResult<SubPageDto> GetFirst()
         {

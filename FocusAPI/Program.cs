@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using static FocusAPI.Services.IUserContextService;
 
 var builder = WebApplication.CreateBuilder(args);
 var authenticationSettings = new AuthenticationSettings();
@@ -31,6 +32,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddScoped<FocusSeeder>();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 
 //Authentication
 builder.Services.AddAuthentication(option =>

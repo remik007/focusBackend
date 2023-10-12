@@ -10,6 +10,5 @@ namespace FocusAPI.Models
         public string DocumentNumber { get; set; }
         public string PhoneNumber { get; set; }
         public int ReservationId { get; set; }
-        public virtual ReservationDto Reservation { get; set; }
     }
 }
