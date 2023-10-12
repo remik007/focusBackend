@@ -8,25 +8,30 @@ namespace FocusAPI.Services
 {
     public interface IAdminService
     {
+        int CreateCategory(TripCategoryDto tripCategoryDto);
         int CreateReservation(ReservationDto reservationDto);
         int CreateSubPage(SubPageDto subPageDto);
         int CreateTrip(TripDto tripDto);
+        void DeleteCategory(int id);
         void DeleteReservation(int id);
         void DeleteSubPage(int id);
         void DeleteTrip(int id);
+        IEnumerable<TripCategoryDto> GetAllCategories();
         IEnumerable<ReservationDto> GetAllReservations();
         IEnumerable<SubPageDto> GetAllSubPages();
         IEnumerable<TripDto> GetAllTrips();
+        TripCategoryDto GetCategoryById(int id);
+        ContactDto GetContact();
         ReservationDto GetReservationById(int id);
         SubPageDto GetSubPageById(int id);
         TripDto GetTripById(int id);
-        ContactDto GetContact();
+        int UpdateCategory(int id, TripCategoryDto tripCategoryDto);
+        int UpdateContact(ContactDto contactDto);
         int UpdateReservation(int id, ReservationDto reservationDto);
         int UpdateSubPage(int id, SubPageDto subPageDto);
         int UpdateTrip(int id, TripDto tripDto);
-        int UpdateContact(ContactDto tripDto);
     }
-        public class AdminService : IAdminService
+    public class AdminService : IAdminService
     {
         private readonly FocusDbContext _context;
         private readonly IMapper _mapper;
@@ -256,6 +261,60 @@ namespace FocusAPI.Services
             _context.SaveChanges();
 
             return contact.Id;
+        }
+
+        //Categories---------------------------------------------------------------------------------------------------
+        public TripCategoryDto GetCategoryById(int id)
+        {
+            var tripCategory = _context.TripCategories.FirstOrDefault(t => t.Id == id);
+
+            if (tripCategory == null)
+                throw new NotFoundException("Category not found");
+
+            var tripCategoryDto = _mapper.Map<TripCategoryDto>(tripCategory);
+            return tripCategoryDto;
+        }
+
+        public IEnumerable<TripCategoryDto> GetAllCategories()
+        {
+            var tripCategories = _context.TripCategories.ToList();
+
+            var tripCategoryDtos = _mapper.Map<List<TripCategoryDto>>(tripCategories);
+            return tripCategoryDtos;
+        }
+
+        public int CreateCategory(TripCategoryDto tripCategoryDto)
+        {
+            var tripCategory = _mapper.Map<TripCategory>(tripCategoryDto);
+            _context.TripCategories.Add(tripCategory);
+            _context.SaveChanges();
+            return tripCategory.Id;
+        }
+
+        public int UpdateCategory(int id, TripCategoryDto tripCategoryDto)
+        {
+            var tripCategory = _context.TripCategories.FirstOrDefault(x => x.Id == id);
+
+            if (tripCategory == null)
+                throw new NotFoundException("Category not found");
+
+            var updateTripCategory = _mapper.Map<TripCategory>(tripCategoryDto);
+            _context.TripCategories.Update(updateTripCategory);
+            _context.SaveChanges();
+
+            return tripCategory.Id;
+        }
+
+        public void DeleteCategory(int id)
+        {
+            var tripCategory = _context.TripCategories.FirstOrDefault(x => x.Id == id);
+
+            if (tripCategory == null)
+                throw new NotFoundException("Category not found");
+
+            _context.TripCategories.Remove(tripCategory);
+            _context.SaveChanges();
+
         }
     }
 }

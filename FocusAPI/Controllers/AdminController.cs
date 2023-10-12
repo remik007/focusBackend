@@ -165,5 +165,46 @@ namespace FocusAPI.Controllers
             _adminService.UpdateContact(contactDto);
             return Created($"/api/admin/contacts", null);
         }
+
+        //TripCategories---------------------------------------------------------------------------------------------------------
+        // GET: api/Admin/Categories
+        [HttpGet("categories")]
+        public ActionResult<IEnumerable<TripCategoryDto>> GetAllCategories()
+        {
+            var tripCategoryDtos = _adminService.GetAllCategories();
+            return Ok(tripCategoryDtos);
+        }
+
+        // GET: api/Admin/Categories/5
+        [HttpGet("categories/{id}")]
+        public ActionResult<TripCategoryDto> GetCategoryById([FromRoute] int id)
+        {
+            var tripCategoryDto = _adminService.GetCategoryById(id);
+            return Ok(tripCategoryDto);
+        }
+
+        // POST: api/Admin/Categories
+        [HttpPost("categories")]
+        public ActionResult<TripCategoryDto> CreateCategory([FromBody] TripCategoryDto tripCategoryDto)
+        {
+            var tripCategoryId = _adminService.CreateCategory(tripCategoryDto);
+            return Created($"/api/admin/categories/{tripCategoryId}", null);
+        }
+
+        // DELETE: api/Admin/Categories/5
+        [HttpDelete("categories/{id}")]
+        public ActionResult<TripCategoryDto> DeleteCategory([FromRoute] int id)
+        {
+            _adminService.DeleteCategory(id);
+            return Created($"/api/admin/categories", null);
+        }
+
+        // PUT: api/Admin/Categories/5
+        [HttpPut("categories/{id}")]
+        public ActionResult<TripCategoryDto> UpdateCategory([FromRoute] int id, [FromBody] TripCategoryDto tripCategoryDto)
+        {
+            var tripCategoryId = _adminService.UpdateCategory(id, tripCategoryDto);
+            return Created($"/api/admin/categories/{tripCategoryId}", null);
+        }
     }
 }
