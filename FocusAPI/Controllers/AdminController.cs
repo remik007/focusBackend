@@ -148,5 +148,22 @@ namespace FocusAPI.Controllers
             var subPageId = _adminService.UpdateSubPage(id, subPageDto);
             return Created($"/api/admin/subpages/{subPageId}", null);
         }
+
+        //Contacts---------------------------------------------------------------------------------------------------------
+        // GET: api/Admin/Contacts
+        [HttpGet("contacts")]
+        public ActionResult<IEnumerable<ContactDto>> GetContact()
+        {
+            var contactDto = _adminService.GetContact();
+            return Ok(contactDto);
+        }
+
+        // PUT: api/Admin/Contacts
+        [HttpPut("contacts")]
+        public ActionResult<ContactDto> UpdateContact([FromBody] ContactDto contactDto)
+        {
+            _adminService.UpdateContact(contactDto);
+            return Created($"/api/admin/contacts", null);
+        }
     }
 }

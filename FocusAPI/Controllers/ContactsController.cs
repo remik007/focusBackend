@@ -24,9 +24,9 @@ namespace FocusAPI.Controllers
 
         // GET: api/Contacts/5
         [HttpGet]
-        public ActionResult<SubPageDto> GetFirst()
+        public ActionResult<ContactDto> GetContact()
         {
-            var contactDto = _contactService.GetFirst();
+            var contactDto = _contactService.GetContact();
             return Ok(contactDto);
         }
     }

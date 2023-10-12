@@ -20,9 +20,11 @@ namespace FocusAPI.Services
         ReservationDto GetReservationById(int id);
         SubPageDto GetSubPageById(int id);
         TripDto GetTripById(int id);
+        ContactDto GetContact();
         int UpdateReservation(int id, ReservationDto reservationDto);
         int UpdateSubPage(int id, SubPageDto subPageDto);
         int UpdateTrip(int id, TripDto tripDto);
+        int UpdateContact(ContactDto tripDto);
     }
         public class AdminService : IAdminService
     {
@@ -227,6 +229,33 @@ namespace FocusAPI.Services
             _context.SubPages.Remove(subPage);
             _context.SaveChanges();
 
+        }
+
+        //Contact---------------------------------------------------------------------------------------------------
+        public ContactDto GetContact()
+        {
+            var contact = _context.SubPages
+                .FirstOrDefault();
+
+            if (contact == null)
+                throw new NotFoundException("No contact details found");
+
+            var contactDto = _mapper.Map<ContactDto>(contact);
+            return contactDto;
+        }
+
+        public int UpdateContact(ContactDto contactDto)
+        {
+            var contact = _context.Contacts.FirstOrDefault();
+
+            if (contact == null)
+                throw new NotFoundException("Contact not found");
+
+            var updatedContact = _mapper.Map<Contact>(contactDto);
+            _context.Contacts.Update(updatedContact);
+            _context.SaveChanges();
+
+            return contact.Id;
         }
     }
 }

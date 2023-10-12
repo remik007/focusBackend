@@ -7,7 +7,7 @@ namespace FocusAPI.Services
 {
     public interface IContactService
     {
-        public ContactDto GetFirst();
+        public ContactDto GetContact();
     }
     public class ContactService : IContactService
     {
@@ -20,7 +20,7 @@ namespace FocusAPI.Services
             _mapper = mapper;
         }
 
-        public ContactDto GetFirst()
+        public ContactDto GetContact()
         {
             var contact = _context.SubPages
                 .FirstOrDefault();
