@@ -6,118 +6,36 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FocusAPI.Data;
+using FocusAPI.Models;
+using FocusAPI.Services;
 
 namespace FocusAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/subpages")]
     [ApiController]
     public class SubPagesController : ControllerBase
     {
-        private readonly FocusDbContext _context;
+        private readonly ISubPageService _subpageService;
 
-        public SubPagesController(FocusDbContext context)
+        public SubPagesController(ISubPageService subpageService)
         {
-            _context = context;
+            _subpageService = subpageService;
         }
 
-        // GET: api/SubPages
+        // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SubPage>>> GetSubPages()
+        public ActionResult<IEnumerable<SubPageDto>> GetAll()
         {
-          if (_context.SubPages == null)
-          {
-              return NotFound();
-          }
-            return await _context.SubPages.ToListAsync();
+            var subPageDtos = _subpageService.GetAll();
+            return Ok(subPageDtos);
         }
 
-        // GET: api/SubPages/5
+        // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SubPage>> GetSubPage(int id)
+        public ActionResult<SubPageDto> GetById([FromRoute] int id)
         {
-          if (_context.SubPages == null)
-          {
-              return NotFound();
-          }
-            var subPage = await _context.SubPages.FindAsync(id);
-
-            if (subPage == null)
-            {
-                return NotFound();
-            }
-
-            return subPage;
-        }
-
-        // PUT: api/SubPages/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSubPage(int id, SubPage subPage)
-        {
-            if (id != subPage.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(subPage).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SubPageExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/SubPages
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<SubPage>> PostSubPage(SubPage subPage)
-        {
-          if (_context.SubPages == null)
-          {
-              return Problem("Entity set 'FocusDbContext.SubPages'  is null.");
-          }
-            _context.SubPages.Add(subPage);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSubPage", new { id = subPage.Id }, subPage);
-        }
-
-        // DELETE: api/SubPages/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSubPage(int id)
-        {
-            if (_context.SubPages == null)
-            {
-                return NotFound();
-            }
-            var subPage = await _context.SubPages.FindAsync(id);
-            if (subPage == null)
-            {
-                return NotFound();
-            }
-
-            _context.SubPages.Remove(subPage);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool SubPageExists(int id)
-        {
-            return (_context.SubPages?.Any(e => e.Id == id)).GetValueOrDefault();
+            var subPageDto = _subpageService.GetById(id);
+            return Ok(subPageDto);
         }
     }
 }

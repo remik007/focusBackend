@@ -30,7 +30,7 @@ namespace FocusAPI.Services
             var trip = _context.Trips
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
-                .Include(t => t.Reservations)
+                .Include(t => t.Reservations).ThenInclude(c => c.Participants)
                 .FirstOrDefault(t => t.Id == id && t.IsEnabled == true);
 
             if (trip == null)
