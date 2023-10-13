@@ -6,6 +6,7 @@ using FocusAPI.Middleware;
 using FocusAPI.Models;
 using FocusAPI.Models.Validators;
 using FocusAPI.Services;
+using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -39,6 +40,7 @@ builder.Services.AddSingleton(appSettings);
 builder.Services.AddSingleton(emailSettings);
 builder.Services.AddScoped<FocusSeeder>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddTransient<IMailService, MailService>();
 
 //Authentication
 builder.Services.AddAuthentication(option =>
