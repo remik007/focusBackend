@@ -17,9 +17,9 @@ namespace FocusAPI.Services
         private readonly FocusDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
-        private readonly AppConfig _appConfig;
+        private readonly AppSettings _appConfig;
 
-        public ReservationService(FocusDbContext context, IMapper mapper, IUserContextService userContextService, AppConfig appConfig)
+        public ReservationService(FocusDbContext context, IMapper mapper, IUserContextService userContextService, AppSettings appConfig)
         {
             _context = context;
             _mapper = mapper;

@@ -15,9 +15,11 @@ using static FocusAPI.Services.IUserContextService;
 
 var builder = WebApplication.CreateBuilder(args);
 var authenticationSettings = new AuthenticationSettings();
-var appConfig = new AppConfig();
+var appSettings = new AppSettings();
+var emailSettings = new EmailSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
-builder.Configuration.GetSection("AppConfig").Bind(appConfig);
+builder.Configuration.GetSection("AppSettings").Bind(appSettings);
+builder.Configuration.GetSection("EmailSettings").Bind(emailSettings);
 // Add services to the container.
 
 builder.Services.AddControllers().AddFluentValidation();
@@ -33,7 +35,8 @@ builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 builder.Services.AddSingleton(authenticationSettings);
-builder.Services.AddSingleton(appConfig);
+builder.Services.AddSingleton(appSettings);
+builder.Services.AddSingleton(emailSettings);
 builder.Services.AddScoped<FocusSeeder>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 

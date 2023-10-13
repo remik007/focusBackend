@@ -1,6 +1,6 @@
 ﻿namespace FocusAPI
 {
-    public class AppConfig
+    public class AppSettings
     {
         public int ReservationRetentionPeriodDays { get; set; }
     }
