@@ -5,7 +5,7 @@ namespace FocusAPI.Models.Validators
 {
     public class TransportTypeDtoValidator : AbstractValidator<TransportTypeDto>
     {
-        public TransportTypeDtoValidator(FocusDbContext dbContext)
+        public TransportTypeDtoValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty();

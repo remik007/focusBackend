@@ -5,7 +5,7 @@ namespace FocusAPI.Models.Validators
 {
     public class TripDtoValidator : AbstractValidator<TripDto>
     {
-        public TripDtoValidator(FocusDbContext dbContext)
+        public TripDtoValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

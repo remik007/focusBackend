@@ -5,7 +5,7 @@ namespace FocusAPI.Models.Validators
 {
     public class ParticipantDtoValidator : AbstractValidator<ParticipantDto>
     {
-        public ParticipantDtoValidator(FocusDbContext dbContext)
+        public ParticipantDtoValidator()
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()

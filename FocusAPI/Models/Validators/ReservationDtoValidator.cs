@@ -5,7 +5,7 @@ namespace FocusAPI.Models.Validators
 {
     public class ReservationDtoValidator : AbstractValidator<ReservationDto>
     {
-        public ReservationDtoValidator(FocusDbContext dbContext)
+        public ReservationDtoValidator()
         {
             RuleFor(x => x.OwnerId)
                 .NotEmpty();

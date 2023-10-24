@@ -5,7 +5,7 @@ namespace FocusAPI.Models.Validators
 {
     public class SubPageDtoValidator : AbstractValidator<SubPageDto>
     {
-        public SubPageDtoValidator(FocusDbContext dbContext)
+        public SubPageDtoValidator()
         {
             RuleFor(x => x.ShortName)
                 .NotEmpty()

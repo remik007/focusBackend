@@ -1,12 +1,15 @@
 ﻿using FluentValidation;
 using FocusAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FocusAPI.Models.Validators
 {
     public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
     {
+        private readonly FocusDbContext _context;
         public RegisterUserDtoValidator(FocusDbContext dbContext)
         {
+            _context = dbContext;
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .EmailAddress();
@@ -19,7 +22,7 @@ namespace FocusAPI.Models.Validators
             RuleFor(x => x.Email)
                 .Custom((value, context) =>
                 {
-                    var emailInUse = dbContext.AppUsers.Any(u => u.Email == value);
+                    var emailInUse = _context.AppUsers.Any(u => u.Email == value);
                     if (emailInUse)
                         context.AddFailure("Email", "This email address is taken");
                 });
@@ -27,7 +30,7 @@ namespace FocusAPI.Models.Validators
             RuleFor(x => x.UserName)
                 .Custom((value, context) =>
                 {
-                    var usernameInUse = dbContext.AppUsers.Any(u => u.UserName == value);
+                    var usernameInUse = _context.AppUsers.Any(u => u.UserName == value);
                     if (usernameInUse)
                         context.AddFailure("UserName", "This username is taken");
                 });
