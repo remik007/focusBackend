@@ -10,15 +10,23 @@ namespace FocusAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly IEmailService _emailService;
+        public AccountController(IAccountService accountService, IEmailService emailService)
         {
             _accountService = accountService;
+            _emailService = emailService;
         }
         [HttpPost("register")]
         public ActionResult RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
-            _accountService.RegisterUser(registerUserDto);
-            //SEND EMAIL
+            var accountToken = _accountService.RegisterUser(registerUserDto);
+            var emailRequest = new EmailRequest
+            {
+                To = accountToken.User.Email,
+                Body = $"TOKEN do potwierdzenia konta: {accountToken.Token}",
+                Subject = "Biuro Podróży FOCUS. Potwierdź swoje konto."
+            };
+            bool result = _emailService.Send(emailRequest, new CancellationToken());
             return Ok();
         }
 
@@ -47,7 +55,13 @@ namespace FocusAPI.Controllers
         public ActionResult GetResetPasswordToken([FromBody] GetResetPasswordDto getResetPasswordDto)
         {
             var accountToken = _accountService.GetResetPasswordToken(getResetPasswordDto.Login);
-            //SEND EMAIL
+            var emailRequest = new EmailRequest
+            {
+                To = accountToken.User.Email,
+                Body = $"TOKEN do zresetowania hasła: {accountToken.Token}",
+                Subject = "Biuro Podróży FOCUS. Zresetuj swoje hasło."
+            };
+            bool result = _emailService.Send(emailRequest, new CancellationToken());
             return Ok();
         }
     }

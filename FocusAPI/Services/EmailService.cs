@@ -8,7 +8,7 @@ namespace FocusAPI.Services
 {
     public interface IEmailService
     {
-        Task<bool> SendAsync(EmailRequest emailRequest, CancellationToken ct);
+        bool Send(EmailRequest emailRequest, CancellationToken ct);
     }
     public class EmailService : IEmailService
     {
@@ -18,7 +18,7 @@ namespace FocusAPI.Services
             _emailSettings = emailSettings;
         }
 
-        public async Task<bool> SendAsync(EmailRequest emailRequest, CancellationToken ct = default)
+        public bool Send(EmailRequest emailRequest, CancellationToken ct = default)
         {
             try
             {
@@ -53,15 +53,15 @@ namespace FocusAPI.Services
 
                 if (_emailSettings.UseSSL)
                 {
-                    await smtp.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.SslOnConnect, ct);
+                    smtp.Connect(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.SslOnConnect, ct);
                 }
                 else if (_emailSettings.UseStartTls)
                 {
-                    await smtp.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls, ct);
+                    smtp.Connect(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls, ct);
                 }
-                await smtp.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password, ct);
-                await smtp.SendAsync(mail, ct);
-                await smtp.DisconnectAsync(true, ct);
+                smtp.Authenticate(_emailSettings.UserName, _emailSettings.Password, ct);
+                smtp.Send(mail, ct);
+                smtp.Disconnect(true, ct);
 
                 #endregion
 

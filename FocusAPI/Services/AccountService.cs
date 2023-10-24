@@ -14,9 +14,9 @@ namespace FocusAPI.Services
 {
     public interface IAccountService
     {
-        void RegisterUser(RegisterUserDto dto);
+        AccountToken RegisterUser(RegisterUserDto dto);
         String GenerateToken(LoginDto dto);
-        String GetResetPasswordToken(string login);
+        AccountToken GetResetPasswordToken(string login);
         void ResetPassword(ResetPasswordDto resetPasswordDto);
         void ConfirmAccount(ConfirmAccountDto confirmAccountDto);
     }
@@ -33,7 +33,7 @@ namespace FocusAPI.Services
             _authenticationSettings = authenticationSettings;
             _appSettings = appSettings;
         }
-        public void RegisterUser(RegisterUserDto dto)
+        public AccountToken RegisterUser(RegisterUserDto dto)
         {
             var newUser = new AppUser
             {
@@ -48,7 +48,9 @@ namespace FocusAPI.Services
             newUser.Password = hashedPassword;
             _context.AppUsers.Add(newUser);
             _context.SaveChanges();
-            GenerateAccountToken(newUser.Id);
+            var accountToken = GenerateAccountToken(newUser.Id);
+            _context.Entry(accountToken).Reference(x => x.User).Load();
+            return accountToken;
         }
 
         public String GenerateToken(LoginDto dto)
@@ -89,7 +91,7 @@ namespace FocusAPI.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public String GetResetPasswordToken(string login)
+        public AccountToken GetResetPasswordToken(string login)
         {
             var userId = _context.AppUsers.FirstOrDefault(u => u.Email == login || u.UserName == login).Id;
             var accountToken = GenerateAccountToken(userId);
@@ -126,7 +128,7 @@ namespace FocusAPI.Services
             }
         }
 
-        private String GenerateAccountToken(int userId)
+        private AccountToken GenerateAccountToken(int userId)
         {
             var token = GenerateRandomString();
             var accountToken = new AccountToken()
@@ -137,7 +139,7 @@ namespace FocusAPI.Services
             };
             _context.AccountTokens.Add(accountToken);
             _context.SaveChanges();
-            return token;
+            return accountToken;
         }
 
         private void DeleteAccountToken(string token)
