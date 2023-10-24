@@ -1,6 +1,7 @@
 ﻿using FocusAPI.Data;
 using FocusAPI.Exceptions;
 using FocusAPI.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,9 @@ namespace FocusAPI.Services
     public interface IAccountService
     {
         void RegisterUser(RegisterUserDto dto);
-        string GenerateToken(LoginDto dto);
+        String GenerateToken(LoginDto dto);
+        String GetResetPasswordToken(string login);
+        void ResetPassword(ResetPasswordDto resetPasswordDto);
     }
     public class AccountService : IAccountService
     {
@@ -47,18 +50,18 @@ namespace FocusAPI.Services
             GenerateAccountToken(newUser.Id);
         }
 
-        public string GenerateToken(LoginDto dto)
+        public String GenerateToken(LoginDto dto)
         {
             var user = _context.AppUsers
                 .Include(u => u.UserRole)
                 .FirstOrDefault(u => u.Email == dto.Login || u.UserName == dto.Login);
-            if(user == null)
+            if (user == null)
             {
                 throw new BadRequestException("Invalid login or password");
             }
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
-            if(result == PasswordVerificationResult.Failed)
+            if (result == PasswordVerificationResult.Failed)
             {
                 throw new BadRequestException("Invalid login or password");
             }
@@ -85,7 +88,44 @@ namespace FocusAPI.Services
             return tokenHandler.WriteToken(token);
         }
 
-        private void GenerateAccountToken(int userId)
+        public String GetResetPasswordToken(string login)
+        {
+            var userId = _context.AppUsers.FirstOrDefault(u => u.Email == login || u.UserName == login).Id;
+            var accountToken = GenerateAccountToken(userId);
+            return accountToken;
+        }
+
+        public void ConfirmAccount(ConfirmAccountDto confirmAccountDto)
+        {
+            var tokenExist = _context.AccountTokens
+                            .Include(x => x.User)
+                            .Any(u => u.Token == confirmAccountDto.Token && u.Created.AddDays(_appSettings.AccountTokenExpireDays) > DateTime.Now && (u.User.Email == confirmAccountDto.Login || u.User.UserName == confirmAccountDto.Login));
+            if (tokenExist)
+            {
+                _context.AppUsers.Where(u => u.Email == confirmAccountDto.Login || u.UserName == confirmAccountDto.Login).ExecuteUpdate(x => x.SetProperty(u => u.IsConfirmed, true));
+            }
+        }
+
+        public void ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var tokenExist = _context.AccountTokens
+                .Include(x => x.User)
+                .Any(u => u.Token == resetPasswordDto.Token && u.Created.AddDays(_appSettings.AccountTokenExpireDays) > DateTime.Now && (u.User.Email == resetPasswordDto.Login || u.User.UserName == resetPasswordDto.Login));
+            if (tokenExist)
+            {
+                var user = _context.AppUsers.FirstOrDefault(u => u.Email == resetPasswordDto.Login || u.UserName == resetPasswordDto.Login);
+                var hashedPassword = _passwordHasher.HashPassword(user, resetPasswordDto.Password);
+                user.Password = hashedPassword;
+                _context.AppUsers.Where(u => u.Id == user.Id).ExecuteUpdate(x => x.SetProperty(u => u.Password, hashedPassword));
+                DeleteAccountToken(resetPasswordDto.Token);
+                //EF4.0
+                //_context.AppUsers.Attach(user);
+                //_context.Entry(user).Property(x => x.Password).IsModified = true;
+                //_context.SaveChanges();
+            }
+        }
+
+        private String GenerateAccountToken(int userId)
         {
             var token = GenerateRandomString();
             var accountToken = new AccountToken()
@@ -96,6 +136,12 @@ namespace FocusAPI.Services
             };
             _context.AccountTokens.Add(accountToken);
             _context.SaveChanges();
+            return token;
+        }
+
+        private void DeleteAccountToken(string token)
+        {
+            _context.AccountTokens.Where(t => t.Token == token).ExecuteDelete();
         }
 
         private String GenerateRandomString()

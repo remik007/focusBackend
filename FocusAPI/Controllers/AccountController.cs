@@ -18,6 +18,7 @@ namespace FocusAPI.Controllers
         public ActionResult RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
             _accountService.RegisterUser(registerUserDto);
+            //SEND EMAIL
             return Ok();
         }
 
@@ -28,5 +29,26 @@ namespace FocusAPI.Controllers
             return token;
         }
 
+        [HttpPost("confirm")]
+        public ActionResult ConfirmAccount([FromBody] ConfirmAccountDto confirmAccountDto)
+        {
+            _accountService.ConfirmAccount(confirmAccountDto);
+            return Ok();
+        }
+
+        [HttpPost("resetpassword")]
+        public ActionResult ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            _accountService.ResetPassword(resetPasswordDto);
+            return Ok();
+        }
+
+        [HttpPost("getresetpasswordtoken")]
+        public ActionResult GetResetPasswordToken([FromBody] GetResetPasswordDto getResetPasswordDto)
+        {
+            var accountToken = _accountService.GetResetPasswordToken(getResetPasswordDto.Login);
+            //SEND EMAIL
+            return Ok();
+        }
     }
 }
