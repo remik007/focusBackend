@@ -18,6 +18,7 @@ namespace FocusAPI.Services
         String GenerateToken(LoginDto dto);
         String GetResetPasswordToken(string login);
         void ResetPassword(ResetPasswordDto resetPasswordDto);
+        void ConfirmAccount(ConfirmAccountDto confirmAccountDto);
     }
     public class AccountService : IAccountService
     {
