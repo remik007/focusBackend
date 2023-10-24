@@ -11,6 +11,7 @@
         public string PhoneNumber { get; set; }
         public int UserRoleId { get; set; }
         public virtual UserRole UserRole { get; set; }
+        public Boolean IsConfirmed { get; set; } = false;
 
     }
 }

@@ -92,7 +92,7 @@ namespace FocusAPI.Data
                     LastName = "Admin",
                     PhoneNumber = "123123123",
                     Email = "remik007@gmail.com",
-                    UserRoleId = 2
+                    UserRoleId = 2,
                 },
                 new RegisterUserDto()
                 {
@@ -101,7 +101,7 @@ namespace FocusAPI.Data
                     FirstName = "Test",
                     LastName = "User",
                     PhoneNumber = "1231231232",
-                    Email = "remik0072@gmail.com",
+                    Email = "remik.majka@gmail.com",
                     UserRoleId = 1
                 }
             };

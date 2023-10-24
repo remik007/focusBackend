@@ -39,7 +39,7 @@ builder.Services.AddSingleton(appSettings);
 builder.Services.AddSingleton(emailSettings);
 builder.Services.AddScoped<FocusSeeder>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
-builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 //Authentication
 builder.Services.AddAuthentication(option =>
@@ -67,11 +67,9 @@ var seeder = scope.ServiceProvider.GetRequiredService<FocusSeeder>();
 seeder.Seed();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseDeveloperExceptionPage();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeMiddleware>();

@@ -13,6 +13,7 @@ namespace FocusAPI.Data
         public DbSet<Trip> Trips { get; set; }
         public DbSet<TripCategory> TripCategories { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<AccountToken> AccountTokens { get; set; }
 
         public FocusDbContext(DbContextOptions<FocusDbContext> options): base(options)
         {
@@ -104,6 +105,14 @@ namespace FocusAPI.Data
                 entity.Property(e => e.From).IsRequired();
                 entity.Property(e => e.To).IsRequired();
                 entity.Property(e => e.ImageUrl).HasMaxLength(1023);
+            });
+
+            modelBuilder.Entity<AccountToken>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Token).IsRequired().HasMaxLength(16);
+                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.Created).IsRequired();
             });
         }
     }

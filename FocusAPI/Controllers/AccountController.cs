@@ -27,5 +27,6 @@ namespace FocusAPI.Controllers
             string token = _accountService.GenerateToken(loginDto);
             return token;
         }
+
     }
 }

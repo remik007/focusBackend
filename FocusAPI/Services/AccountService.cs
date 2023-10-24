@@ -21,11 +21,13 @@ namespace FocusAPI.Services
         private readonly FocusDbContext _context;
         private readonly IPasswordHasher<AppUser> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
-        public AccountService(FocusDbContext context, IPasswordHasher<AppUser> passwordHasher, AuthenticationSettings authenticationSettings)
+        private readonly AppSettings _appSettings;
+        public AccountService(FocusDbContext context, IPasswordHasher<AppUser> passwordHasher, AuthenticationSettings authenticationSettings, AppSettings appSettings)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings;
+            _appSettings = appSettings;
         }
         public void RegisterUser(RegisterUserDto dto)
         {
@@ -42,6 +44,7 @@ namespace FocusAPI.Services
             newUser.Password = hashedPassword;
             _context.AppUsers.Add(newUser);
             _context.SaveChanges();
+            GenerateAccountToken(newUser.Id);
         }
 
         public string GenerateToken(LoginDto dto)
@@ -81,5 +84,45 @@ namespace FocusAPI.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
+
+        private void GenerateAccountToken(int userId)
+        {
+            var token = GenerateRandomString();
+            var accountToken = new AccountToken()
+            {
+                UserId = userId,
+                Token = token,
+                Created = DateTime.Now
+            };
+            _context.AccountTokens.Add(accountToken);
+            _context.SaveChanges();
+        }
+
+        private String GenerateRandomString()
+        {
+            Random rand = new Random();
+
+            // Choosing the size of string 
+            // Using Next() string 
+            int stringlen = _appSettings.AccountTokenLength;
+            int randValue;
+            string str = "";
+            char letter;
+            for (int i = 0; i < stringlen; i++)
+            {
+
+                // Generating a random number. 
+                randValue = rand.Next(0, 26);
+
+                // Generating random character by converting 
+                // the random number into character. 
+                letter = Convert.ToChar(randValue + 65);
+
+                // Appending the letter to string. 
+                str = str + letter;
+            }
+            return str;
+        }
+
     }
 }
