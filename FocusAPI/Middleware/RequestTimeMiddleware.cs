@@ -5,7 +5,7 @@ namespace FocusAPI.Middleware
     public class RequestTimeMiddleware : IMiddleware
     {
         private Stopwatch _stopwatch;
-        private readonly ILogger _logger;
+        private readonly ILogger<RequestTimeMiddleware> _logger;
         public RequestTimeMiddleware(ILogger<RequestTimeMiddleware> logger)
         {
             _stopwatch = new Stopwatch();

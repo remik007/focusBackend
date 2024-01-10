@@ -14,7 +14,7 @@ namespace FocusAPI.Models
         public int TransportTypeId { get; set; }
         public virtual TransportTypeDto TransportType { get; set; }
         public string ImageUrl { get; set; }
-        public int TripTypeId { get; set; }
+        public int TripCategoryId { get; set; }
         public virtual TripCategoryDto TripCategory { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }

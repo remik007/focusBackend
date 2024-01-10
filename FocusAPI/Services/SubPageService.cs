@@ -7,7 +7,7 @@ namespace FocusAPI.Services
 {
     public interface ISubPageService
     {
-        public SubPageDto GetById(int id);
+        public SubPageDto GetByName(string subPageName);
         public IEnumerable<SubPageDto> GetAll();
     }
     public class SubPageService : ISubPageService
@@ -21,10 +21,10 @@ namespace FocusAPI.Services
             _mapper = mapper;
         }
 
-        public SubPageDto GetById(int id)
+        public SubPageDto GetByName(string subPageName)
         {
             var subPage = _context.SubPages
-                .FirstOrDefault(t => t.Id == id);
+                .FirstOrDefault(t => t.Name == subPageName);
 
             if (subPage == null)
                 throw new NotFoundException("Sub Page not found");
