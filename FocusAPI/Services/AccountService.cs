@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace FocusAPI.Services
@@ -15,7 +17,8 @@ namespace FocusAPI.Services
     public interface IAccountService
     {
         AccountToken RegisterUser(RegisterUserDto dto);
-        String GenerateToken(LoginDto dto);
+        LoginOutputDto GenerateToken(LoginDto dto);
+        LoginOutputDto RefreshToken(TokensDto dto);
         AccountToken GetResetPasswordToken(string login);
         void ResetPassword(ResetPasswordDto resetPasswordDto);
         void ConfirmAccount(ConfirmAccountDto confirmAccountDto);
@@ -53,7 +56,7 @@ namespace FocusAPI.Services
             return accountToken;
         }
 
-        public String GenerateToken(LoginDto dto)
+        public LoginOutputDto GenerateToken(LoginDto dto)
         {
             var user = _context.AppUsers
                 .Include(u => u.UserRole)
@@ -72,14 +75,14 @@ namespace FocusAPI.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Name, $"{user.Email}"),
                 new Claim(ClaimTypes.Role, $"{user.UserRole.Name}"),
                 new Claim(ClaimTypes.Email, $"{user.Email}")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
+            var expires = DateTime.Now.AddMinutes(_authenticationSettings.JwtValidityInMinutes);
 
             var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
                 _authenticationSettings.JwtIssuer,
@@ -88,7 +91,110 @@ namespace FocusAPI.Services
                 signingCredentials: credentials);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
+
+            var refreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_authenticationSettings.RefreshTokenValidityInDays);
+            _context.AppUsers.Update(user);
+            _context.SaveChanges();
+
+            return new LoginOutputDto()
+            {
+                Email = dto.Login,
+                AccessToken = tokenHandler.WriteToken(token),
+                RefreshToken = refreshToken,
+                Expiration = token.ValidTo
+            };
+        }
+
+        
+
+        private static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        public LoginOutputDto RefreshToken(TokensDto dto)
+        {
+            if (dto is null || dto.AccessToken is null || dto.RefreshToken is null)
+            {
+                throw new BadRequestException("Invalid request data.");
+            }
+
+            string accessToken = dto.AccessToken;
+            string refreshToken = dto.RefreshToken;
+
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null)
+            {
+                throw new BadRequestException("Invalid access token or refresh token");
+            }
+
+            var user = _context.AppUsers.FirstOrDefault(x => x.Email == principal.Identity.Name);
+
+            if (user == null || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                throw new BadRequestException("Invalid access token or refresh token");
+            }
+
+            var newRefreshToken = GenerateRefreshToken();
+
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, $"{user.Email}"),
+                new Claim(ClaimTypes.Role, $"{user.UserRole.Name}"),
+                new Claim(ClaimTypes.Email, $"{user.Email}")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddMinutes(_authenticationSettings.JwtValidityInMinutes);
+
+            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
+                _authenticationSettings.JwtIssuer,
+                claims,
+                expires: expires,
+                signingCredentials: credentials);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_authenticationSettings.RefreshTokenValidityInDays);
+            _context.AppUsers.Update(user);
+            _context.SaveChanges();
+
+            return new LoginOutputDto()
+            {
+                Email = user.Email,
+                AccessToken = tokenHandler.WriteToken(token),
+                RefreshToken = newRefreshToken,
+                Expiration = token.ValidTo
+            };
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey)),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+
         }
 
         public AccountToken GetResetPasswordToken(string login)

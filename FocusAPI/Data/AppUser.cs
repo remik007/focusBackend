@@ -12,6 +12,8 @@
         public int UserRoleId { get; set; }
         public virtual UserRole UserRole { get; set; }
         public Boolean IsConfirmed { get; set; } = false;
+        public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
 
     }
 }

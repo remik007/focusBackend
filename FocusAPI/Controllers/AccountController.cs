@@ -31,9 +31,16 @@ namespace FocusAPI.Controllers
         }
 
         [HttpPost("login")]
-        public string Login([FromBody] LoginDto loginDto)
+        public LoginOutputDto Login([FromBody] LoginDto loginDto)
         {
-            string token = _accountService.GenerateToken(loginDto);
+            LoginOutputDto token = _accountService.GenerateToken(loginDto);
+            return token;
+        }
+
+        [HttpPost("refresh")]
+        public LoginOutputDto Refresh([FromBody] TokensDto tokensDto)
+        {
+            LoginOutputDto token = _accountService.RefreshToken(tokensDto);
             return token;
         }
 
