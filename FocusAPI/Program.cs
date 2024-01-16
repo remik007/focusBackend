@@ -25,6 +25,16 @@ builder.Configuration.GetSection("EmailSettings").Bind(emailSettings);
 builder.Services.AddControllers().AddFluentValidation();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FocusApiPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("*")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+});
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FocusDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -74,6 +84,7 @@ app.UseSwaggerUI();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeMiddleware>();
 
+app.UseCors("FocusApiPolicy");
 app.UseAuthentication();
 
 app.UseHttpsRedirection();
