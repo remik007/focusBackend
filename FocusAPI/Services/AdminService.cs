@@ -24,6 +24,7 @@ namespace FocusAPI.Services
         IEnumerable<TransportTypeDto> GetAllTransportTypes();
         IEnumerable<TripDto> GetAllTrips();
         IEnumerable<AppUserDto> GetUsers();
+        TripCategoryDetailsDto GetCategoryByName(string category);
         TripCategoryDto GetCategoryById(int id);
         ContactDto GetContact();
         ReservationDto GetReservationById(int id);
@@ -279,6 +280,22 @@ namespace FocusAPI.Services
 
             var tripCategoryDto = _mapper.Map<TripCategoryDto>(tripCategory);
             return tripCategoryDto;
+        }
+
+        public TripCategoryDetailsDto GetCategoryByName(string category)
+        {
+            var trips = _context.Trips
+                .Include(t => t.TripCategory)
+                .Include(t => t.TransportType)
+                .Include(t => t.Reservations).ThenInclude(c => c.Participants)
+                .Where(t => t.TripCategory.Name == category)
+                .OrderByDescending(t => t.From)
+                .ToList();
+
+            var tripDtos = _mapper.Map<List<TripDto>>(trips);
+            var tripCategoryDetailsDto = new TripCategoryDetailsDto() { Name = category, Trips = tripDtos };
+
+            return tripCategoryDetailsDto;
         }
 
         public IEnumerable<TripCategoryDto> GetAllCategories()

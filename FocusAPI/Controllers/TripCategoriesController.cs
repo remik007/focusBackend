@@ -37,5 +37,13 @@ namespace FocusAPI.Controllers
             var tripDto = _categoriesService.GetById(id);
             return Ok(tripDto);
         }
+
+        // GET: api/Trips/{category}
+        [HttpGet("{category}")]
+        public ActionResult<IEnumerable<TripDto>> GetByName(string category)
+        {
+            var tripDtos = _categoriesService.GetByName(category);
+            return Ok(tripDtos);
+        }
     }
 }

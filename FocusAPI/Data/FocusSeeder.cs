@@ -160,9 +160,89 @@ namespace FocusAPI.Data
                     TransportTypeId = 1,
                     ImageUrl = "",
                     TripCategoryId = 1,
-                    From = new DateTime(2023, 3, 19),
-                    To = new DateTime(2023, 3, 22),
+                    From = new DateTime(2024, 3, 19),
+                    To = new DateTime(2024, 3, 22),
                     IsEnabled = true
+                },
+                new Trip()
+                {
+                    ShortName = "Porto2",
+                    Name = "Porto i Dolina Douro. Urokliwa architektura, klimatyczne uliczki, pyszne jedzenie i cudowni ludzie.",
+                    ShortDescription = "Krótki opis",
+                    Description = "Długi opis",
+                    Prize = "1590",
+                    OldPrize = "1690",
+                    AvailableSeats = 20,
+                    TransportTypeId = 1,
+                    ImageUrl = "",
+                    TripCategoryId = 1,
+                    From = new DateTime(2024, 2, 19),
+                    To = new DateTime(2024, 2, 22),
+                    IsEnabled = true
+                },
+                new Trip()
+                {
+                    ShortName = "Porto3",
+                    Name = "Porto i Dolina Douro. Urokliwa architektura, klimatyczne uliczki, pyszne jedzenie i cudowni ludzie.",
+                    ShortDescription = "Krótki opis",
+                    Description = "Długi opis",
+                    Prize = "1590",
+                    OldPrize = "1690",
+                    AvailableSeats = 20,
+                    TransportTypeId = 1,
+                    ImageUrl = "",
+                    TripCategoryId = 1,
+                    From = new DateTime(2024, 2, 19),
+                    To = new DateTime(2024, 2, 22),
+                    IsEnabled = false
+                },
+                new Trip()
+                {
+                    ShortName = "Watykan",
+                    Name = "Porto i Dolina Douro. Urokliwa architektura, klimatyczne uliczki, pyszne jedzenie i cudowni ludzie.",
+                    ShortDescription = "Krótki opis",
+                    Description = "Długi opis",
+                    Prize = "2590",
+                    OldPrize = "2790",
+                    AvailableSeats = 20,
+                    TransportTypeId = 1,
+                    ImageUrl = "",
+                    TripCategoryId = 1,
+                    From = new DateTime(2024, 2, 19),
+                    To = new DateTime(2024, 2, 26),
+                    IsEnabled = true
+                },
+                new Trip()
+                {
+                    ShortName = "Watykan2",
+                    Name = "Porto i Dolina Douro. Urokliwa architektura, klimatyczne uliczki, pyszne jedzenie i cudowni ludzie.",
+                    ShortDescription = "Krótki opis",
+                    Description = "Długi opis",
+                    Prize = "1590",
+                    OldPrize = "1690",
+                    AvailableSeats = 20,
+                    TransportTypeId = 1,
+                    ImageUrl = "",
+                    TripCategoryId = 1,
+                    From = new DateTime(2024, 3, 1),
+                    To = new DateTime(2024, 3, 4),
+                    IsEnabled = true
+                },
+                new Trip()
+                {
+                    ShortName = "Watykan3",
+                    Name = "Porto i Dolina Douro. Urokliwa architektura, klimatyczne uliczki, pyszne jedzenie i cudowni ludzie.",
+                    ShortDescription = "Krótki opis",
+                    Description = "Długi opis",
+                    Prize = "1590",
+                    OldPrize = "1690",
+                    AvailableSeats = 20,
+                    TransportTypeId = 1,
+                    ImageUrl = "",
+                    TripCategoryId = 1,
+                    From = new DateTime(2024, 3, 1),
+                    To = new DateTime(2024, 3, 4),
+                    IsEnabled = false
                 }
             };
             return trips;

@@ -104,7 +104,8 @@ namespace FocusAPI.Services
                 Email = dto.Login,
                 AccessToken = tokenHandler.WriteToken(token),
                 RefreshToken = refreshToken,
-                Expiration = token.ValidTo
+                Expiration = token.ValidTo,
+                IsAdmin = user.UserRole.Name == "Admin"
             };
         }
 
@@ -134,7 +135,7 @@ namespace FocusAPI.Services
                 throw new BadRequestException("Invalid access token or refresh token");
             }
 
-            var user = _context.AppUsers.FirstOrDefault(x => x.Email == principal.Identity.Name);
+            var user = _context.AppUsers.Include(x => x.UserRole).FirstOrDefault(x => x.Email == principal.Identity.Name);
 
             if (user == null || user.RefreshTokenExpiryTime <= DateTime.Now)
             {
@@ -173,7 +174,8 @@ namespace FocusAPI.Services
                 Email = user.Email,
                 AccessToken = tokenHandler.WriteToken(token),
                 RefreshToken = newRefreshToken,
-                Expiration = token.ValidTo
+                Expiration = token.ValidTo,
+                IsAdmin = user.UserRole.Name == "Admin"
             };
         }
 

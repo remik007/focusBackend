@@ -176,11 +176,19 @@ namespace FocusAPI.Controllers
         }
 
         // GET: api/Admin/Categories/5
-        [HttpGet("categories/{id}")]
+        [HttpGet("categories/GetCategoryById/{id}")]
         public ActionResult<TripCategoryDto> GetCategoryById([FromRoute] int id)
         {
             var tripCategoryDto = _adminService.GetCategoryById(id);
             return Ok(tripCategoryDto);
+        }
+
+        // GET: api/Admin/Categories/{category}
+        [HttpGet("categories/GetCategoryByName/{category}")]
+        public ActionResult<TripCategoryDetailsDto> GetCategoryByName([FromRoute] string category)
+        {
+            var tripCategoryDetailsDto = _adminService.GetCategoryByName(category);
+            return Ok(tripCategoryDetailsDto);
         }
 
         // POST: api/Admin/Categories

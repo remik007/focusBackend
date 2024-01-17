@@ -40,6 +40,11 @@ builder.Services.AddDbContext<FocusDbContext>(options => options.UseSqlite(build
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<ITripCategoryService, TripCategoryService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<ISubPageService, SubPageService>();
 builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
@@ -65,7 +70,8 @@ builder.Services.AddAuthentication(option =>
     {
         ValidIssuer = authenticationSettings.JwtIssuer,
         ValidAudience = authenticationSettings.JwtIssuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+        ClockSkew = TimeSpan.Zero
     };
 });
 
