@@ -24,26 +24,26 @@ namespace FocusAPI.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public ActionResult<IEnumerable<TripDto>> GetAll()
+        public ActionResult<IEnumerable<TripCategoryDto>> GetAll()
         {
-            var tripDtos = _categoriesService.GetAll();
-            return Ok(tripDtos);
+            var tripCategoriesDtos = _categoriesService.GetAll();
+            return Ok(tripCategoriesDtos);
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public ActionResult<TripDto> GetById([FromRoute] int id)
+        public ActionResult<TripCategoryDto> GetById([FromRoute] int id)
         {
-            var tripDto = _categoriesService.GetById(id);
-            return Ok(tripDto);
+            var tripCategoryDto = _categoriesService.GetById(id);
+            return Ok(tripCategoryDto);
         }
 
         // GET: api/Trips/{category}
         [HttpGet("{category}")]
-        public ActionResult<IEnumerable<TripDto>> GetByName(string category)
+        public ActionResult<IEnumerable<TripCategoryDetailsDto>> GetByName(string category)
         {
-            var tripDtos = _categoriesService.GetByName(category);
-            return Ok(tripDtos);
+            var tripCategoryDetailsDto = _categoriesService.GetByName(category);
+            return Ok(tripCategoryDetailsDto);
         }
     }
 }
