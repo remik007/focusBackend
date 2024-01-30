@@ -41,6 +41,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripCategoryService, TripCategoryService>();
+builder.Services.AddScoped<ITransportTypeService, TransportTypeService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
