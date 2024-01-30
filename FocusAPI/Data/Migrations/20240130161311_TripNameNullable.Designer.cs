@@ -3,6 +3,7 @@ using System;
 using FocusAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FocusAPI.Data.Migrations
 {
     [DbContext(typeof(FocusDbContext))]
-    partial class FocusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240130161311_TripNameNullable")]
+    partial class TripNameNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -53,13 +56,15 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("IsConfirmed")
+                    b.Property<bool>("IsConfirmed")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -69,16 +74,19 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RefreshToken")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -104,22 +112,27 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AddressLine2")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Facebook")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Google")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Instagram")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -129,6 +142,7 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
@@ -143,11 +157,11 @@ namespace FocusAPI.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Birthday")
-                        .IsRequired()
+                    b.Property<DateTime>("Birthday")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DocumentNumber")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -162,6 +176,7 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
@@ -184,10 +199,10 @@ namespace FocusAPI.Data.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("IsConfirmed")
+                    b.Property<bool>("IsConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("IsPaid")
+                    b.Property<bool>("IsPaid")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("OwnerId")
@@ -217,6 +232,7 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasMaxLength(1023)
                         .HasColumnType("TEXT");
 
@@ -226,6 +242,7 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ShortDescription")
+                        .IsRequired()
                         .HasMaxLength(2047)
                         .HasColumnType("TEXT");
 
