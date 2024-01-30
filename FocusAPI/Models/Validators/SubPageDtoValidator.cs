@@ -17,7 +17,7 @@ namespace FocusAPI.Models.Validators
                 .MaximumLength(2047);
             RuleFor(x => x.Description)
                 .MaximumLength(20479);
-            RuleFor(x => x.ImageUrl)
+            RuleFor(x => x.ImageName)
                 .MaximumLength(1023);
         }
     }

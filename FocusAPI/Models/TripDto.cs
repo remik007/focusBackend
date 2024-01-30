@@ -13,7 +13,8 @@ namespace FocusAPI.Models
         public int AvailableSeats { get; set; }
         public int TransportTypeId { get; set; }
         public virtual TransportTypeDto? TransportType { get; set; }
-        public string? ImageUrl { get; set; }
+        public string? ImageName { get; set; }
+        public string? ImageContent { get; set; }
         public int TripCategoryId { get; set; }
         public virtual TripCategoryDto? TripCategory { get; set; }
         public DateTime From { get; set; }

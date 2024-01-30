@@ -89,7 +89,7 @@ namespace FocusAPI.Controllers
         public ActionResult<TripDto> CreateTrip([FromBody] TripDto tripDto)
         {
             var tripId = _adminService.CreateTrip(tripDto);
-            return Created($"/api/admin/trips/{tripId}", null);
+            return Created($"/api/admin/trips/{tripId}", tripId);
         }
 
         // DELETE: api/Admin/Trips/5

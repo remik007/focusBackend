@@ -77,7 +77,7 @@ namespace FocusAPI.Data
                 entity.Property(e => e.Name).HasMaxLength(1023).IsRequired();
                 entity.Property(e => e.ShortDescription).HasMaxLength(2047);
                 entity.Property(e => e.Description).HasMaxLength(20479);
-                entity.Property(e => e.ImageUrl).HasMaxLength(1023);
+                entity.Property(e => e.ImageName).HasMaxLength(1023);
             });
 
             modelBuilder.Entity<TransportType>(entity =>
@@ -103,7 +103,7 @@ namespace FocusAPI.Data
                 entity.Property(e => e.AvailableSeats).IsRequired();
                 entity.Property(e => e.From).IsRequired();
                 entity.Property(e => e.To).IsRequired();
-                entity.Property(e => e.ImageUrl).HasMaxLength(1023);
+                entity.Property(e => e.ImageName).HasMaxLength(1023);
             });
 
             modelBuilder.Entity<AccountToken>(entity =>
