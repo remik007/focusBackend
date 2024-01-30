@@ -96,9 +96,8 @@ namespace FocusAPI.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.ShortName).HasMaxLength(255).IsRequired();
-                entity.Property(e => e.Name).HasMaxLength(1023).IsRequired();
                 entity.Property(e => e.ShortDescription).HasMaxLength(2047);
-                entity.Property(e => e.Description).HasMaxLength(20479);
+                entity.Property(e => e.Description).HasMaxLength(2147483647).IsRequired();
                 entity.Property(e => e.Prize).HasMaxLength(32);
                 entity.Property(e => e.OldPrize).HasMaxLength(32);
                 entity.Property(e => e.AvailableSeats).IsRequired();

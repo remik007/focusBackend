@@ -7,16 +7,13 @@ namespace FocusAPI.Models.Validators
     {
         public TripDtoValidator()
         {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(1023);
             RuleFor(x => x.ShortName)
                 .NotEmpty()
                 .MaximumLength(255);
             RuleFor(x => x.ShortDescription)
                .MaximumLength(2047);
             RuleFor(x => x.Description)
-               .MaximumLength(20479);
+               .MaximumLength(2147483647); //max text length in SQLITE 2147483647
             RuleFor(x => x.Prize)
                .MaximumLength(32);
             RuleFor(x => x.OldPrize)
