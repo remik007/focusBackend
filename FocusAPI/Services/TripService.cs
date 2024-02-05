@@ -14,6 +14,7 @@ namespace FocusAPI.Services
         public TripDto GetById(int id);
         public IEnumerable<TripDto> GetAll();
         public HeaderDto GetHeader();
+        public IEnumerable<TripDto> GetHighlightedTrips();
     }
     public class TripService : ITripService
     {
@@ -32,7 +33,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .FirstOrDefault(t => t.Id == id && t.IsEnabled == true);
+                .FirstOrDefault(t => t.Id == id && t.IsEnabled == true && t.IsDeleted == false);
 
             if (trip == null)
                 throw new NotFoundException("Trip not found");
@@ -47,7 +48,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .Where(t => t.IsEnabled == true && t.To > DateTime.Now && t.To > DateTime.Now)
+                .Where(t => t.IsEnabled == true && t.IsDeleted == false &&  t.To > DateTime.Now )
                 .OrderByDescending(t => t.From)
                 .ToList();
 
@@ -75,6 +76,19 @@ namespace FocusAPI.Services
                 TransportTypes = transportTypesDto
             };
             return headerDto;
+        }
+
+        public IEnumerable<TripDto> GetHighlightedTrips()
+        {
+            var trips = _context.Trips
+                .Include(t => t.TripCategory)
+                .Include(t => t.TransportType)
+                .Where(t => t.IsHighlighted == true && t.IsDeleted == false && t.IsEnabled == true)
+                .OrderByDescending(t => t.From)
+                .ToList();
+
+            var tripDtos = _mapper.Map<List<TripDto>>(trips);
+            return tripDtos;
         }
     }
 }

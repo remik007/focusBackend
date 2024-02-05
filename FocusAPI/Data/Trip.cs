@@ -23,5 +23,6 @@
         public virtual List<Reservation>? Reservations { get; set; }
         public Boolean IsEnabled { get; set; } = false;
         public Boolean? IsDeleted { get; set; }
+        public Boolean IsHighlighted { get; set; } = false;
     }
 }

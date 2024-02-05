@@ -39,7 +39,7 @@ namespace FocusAPI.Controllers
             return Ok(tripDto);
         }
 
-        // GET: api/Trips/5
+        // GET: api/Trips/header
         [HttpGet("header")]
         public ActionResult<HeaderDto> GetHeader()
         {
@@ -47,5 +47,12 @@ namespace FocusAPI.Controllers
             return Ok(header);
         }
 
+        // GET: api/Trips/Highlighted
+        [HttpGet("highlighted")]
+        public ActionResult<TripDto> GetHighlightedTrips()
+        {
+            var tripDto = _tripService.GetHighlightedTrips();
+            return Ok(tripDto);
+        }
     }
 }

@@ -26,5 +26,6 @@ namespace FocusAPI.Models
         public Boolean IsEnabled { get; set; } = false;
         public int? CurrentAvailableSeats { get; set; }
         public Boolean IsDeleted { get; set; }
+        public Boolean IsHighlighted { get; set; } = false;
     }
 }

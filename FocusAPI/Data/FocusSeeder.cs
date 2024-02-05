@@ -214,7 +214,8 @@ namespace FocusAPI.Data
                     TripCategoryId = 1,
                     From = new DateTime(2024, 2, 19),
                     To = new DateTime(2024, 2, 26),
-                    IsEnabled = true
+                    IsEnabled = true,
+                    IsHighlighted = true
                 },
                 new Trip()
                 {
@@ -231,7 +232,9 @@ namespace FocusAPI.Data
                     TripCategoryId = 1,
                     From = new DateTime(2024, 3, 1),
                     To = new DateTime(2024, 3, 4),
-                    IsEnabled = true
+                    IsEnabled = true,
+                    IsHighlighted = true,
+                    IsDeleted = true
                 },
                 new Trip()
                 {
@@ -248,7 +251,9 @@ namespace FocusAPI.Data
                     TripCategoryId = 1,
                     From = new DateTime(2024, 3, 1),
                     To = new DateTime(2024, 3, 4),
-                    IsEnabled = false
+                    IsEnabled = false,
+                    IsHighlighted = true,
+                    IsDeleted = false
                 }
             };
             return trips;
