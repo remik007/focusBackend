@@ -33,7 +33,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .FirstOrDefault(t => t.Id == id && t.IsEnabled == true && t.IsDeleted == false);
+                .FirstOrDefault(t => t.Id == id && t.IsEnabled == true && t.IsDeleted != true);
 
             if (trip == null)
                 throw new NotFoundException("Trip not found");
@@ -48,7 +48,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .Where(t => t.IsEnabled == true && t.IsDeleted == false &&  t.To > DateTime.Now )
+                .Where(t => t.IsEnabled == true && t.IsDeleted != true &&  t.To > DateTime.Now )
                 .OrderByDescending(t => t.From)
                 .ToList();
 
@@ -83,7 +83,7 @@ namespace FocusAPI.Services
             var trips = _context.Trips
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
-                .Where(t => t.IsHighlighted == true && t.IsDeleted == false && t.IsEnabled == true)
+                .Where(t => t.IsHighlighted == true && t.IsDeleted != true && t.IsEnabled == true)
                 .OrderByDescending(t => t.From)
                 .ToList();
 
