@@ -39,5 +39,13 @@ namespace FocusAPI.Controllers
             return Ok(tripDto);
         }
 
+        // GET: api/Trips/5
+        [HttpGet("header")]
+        public ActionResult<HeaderDto> GetHeader()
+        {
+            var header = _tripService.GetHeader();
+            return Ok(header);
+        }
+
     }
 }

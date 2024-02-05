@@ -13,6 +13,7 @@ namespace FocusAPI.Services
     {
         public TripDto GetById(int id);
         public IEnumerable<TripDto> GetAll();
+        public HeaderDto GetHeader();
     }
     public class TripService : ITripService
     {
@@ -52,6 +53,28 @@ namespace FocusAPI.Services
 
             var tripDtos = _mapper.Map<List<TripDto>>(trips);
             return tripDtos;
+        }
+
+        public HeaderDto GetHeader()
+        {
+            var categories = _context.TripCategories.OrderBy(x => x.Name).ToList();
+            var categoriesDto = _mapper.Map<List<TripCategoryDto>>(categories);
+            var transportTypes = _context.TransportTypes.OrderBy(x => x.Name).ToList();
+            var transportTypesDto = _mapper.Map<List<TransportTypeDto>>(transportTypes);
+            var subPages = _context.SubPages.ToList();
+            var subPagesDto = _mapper.Map<List<SubPageDto>>(subPages);
+            var countries = _context.Trips.Select(x => x.Country).Distinct().OrderBy(x => x).ToList();
+            var departureCities = _context.Trips.Select(x => x.DepartureCity).Distinct().OrderBy(x => x).ToList();
+
+            var headerDto = new HeaderDto()
+            {
+                Countries = countries,
+                DepartureCities = departureCities,
+                SubPages = subPagesDto,
+                TripCategories = categoriesDto,
+                TransportTypes = transportTypesDto
+            };
+            return headerDto;
         }
     }
 }
