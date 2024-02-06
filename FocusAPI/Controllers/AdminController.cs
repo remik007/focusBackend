@@ -215,6 +215,14 @@ namespace FocusAPI.Controllers
             return Created($"/api/admin/categories/{tripCategoryId}", null);
         }
 
+        // GET: api/Admin/Categories/Search
+        [HttpGet("categories/search")]
+        public ActionResult<IEnumerable<TripCategoryDetailsDto>> Search([FromQuery] SearchDto? searchDto)
+        {
+            var tripCategoryDetailsDto = _adminService.Search(searchDto);
+            return Ok(tripCategoryDetailsDto);
+        }
+
         //TransportTypes---------------------------------------------------------------------------------------------------------
         // GET: api/Admin/TransportTypes
         [HttpGet("transporttypes")]

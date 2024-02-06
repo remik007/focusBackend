@@ -25,6 +25,7 @@ namespace FocusAPI.Services
         IEnumerable<TripDto> GetAllTrips();
         IEnumerable<AppUserDto> GetUsers();
         TripCategoryDetailsDto GetCategoryByName(string category);
+        TripCategoryDetailsDto Search(SearchDto searchDto);
         TripCategoryDto GetCategoryById(int id);
         ContactDto GetContact();
         ReservationDto GetReservationById(int id);
@@ -288,7 +289,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .Where(t => t.TripCategory.Name == category)
+                .Where(t => t.IsDeleted != null && t.TripCategory.Name == category)
                 .OrderByDescending(t => t.From)
                 .ToList();
 
@@ -338,6 +339,28 @@ namespace FocusAPI.Services
             _context.TripCategories.Remove(tripCategory);
             _context.SaveChanges();
 
+        }
+
+        public TripCategoryDetailsDto Search(SearchDto search)
+        {
+            var trips = _context.Trips
+                .Include(t => t.TripCategory)
+                .Include(t => t.TransportType)
+                .Include(t => t.Reservations).ThenInclude(c => c.Participants)
+                .Where(t => t.IsDeleted != true
+                    && (search.Country == null || t.Country == search.Country)
+                    && (search.TransportType == null || t.TransportType.Name == search.TransportType)
+                    && (search.DepartureCity == null || t.DepartureCity == search.DepartureCity)
+                    && (search.From == null || t.From >= search.From)
+                    && (search.To == null || t.To <= search.To)
+                    )
+                .OrderByDescending(t => t.From)
+                .ToList();
+
+            var tripDtos = _mapper.Map<List<TripDto>>(trips);
+            var tripCategoryDetailsDto = new TripCategoryDetailsDto() { Name = "Wyniki wyszukiwania", Trips = tripDtos };
+
+            return tripCategoryDetailsDto;
         }
 
         //TransportTypes---------------------------------------------------------------------------------------------------

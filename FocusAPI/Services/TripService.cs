@@ -20,11 +20,13 @@ namespace FocusAPI.Services
     {
         private readonly FocusDbContext _context;
         private readonly IMapper _mapper;
+        private readonly AppSettings _appSettings;
 
-        public TripService(FocusDbContext context, IMapper mapper)
+        public TripService(FocusDbContext context, IMapper mapper, AppSettings appSettings)
         {
             _context = context;
             _mapper = mapper;
+            _appSettings = appSettings;
         }
 
         public TripDto GetById(int id)
@@ -33,7 +35,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .FirstOrDefault(t => t.Id == id && t.IsEnabled == true && t.IsDeleted != true);
+                .FirstOrDefault(t => t.Id == id && t.IsEnabled == true && t.IsDeleted != true && t.To.AddDays(_appSettings.DisplayTripDateRangeInDays) > DateTime.Now);
 
             if (trip == null)
                 throw new NotFoundException("Trip not found");
@@ -48,7 +50,7 @@ namespace FocusAPI.Services
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
                 .Include(t => t.Reservations).ThenInclude(c => c.Participants)
-                .Where(t => t.IsEnabled == true && t.IsDeleted != true &&  t.To > DateTime.Now )
+                .Where(t => t.IsEnabled == true && t.IsDeleted != true &&  t.To.AddDays(_appSettings.DisplayTripDateRangeInDays) > DateTime.Now )
                 .OrderByDescending(t => t.From)
                 .ToList();
 

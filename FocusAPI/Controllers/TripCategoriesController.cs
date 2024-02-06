@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FocusAPI.Data;
 using FocusAPI.Models;
 using FocusAPI.Services;
+using FocusAPI.Data.Migrations;
 
 namespace FocusAPI.Controllers
 {
@@ -29,21 +30,22 @@ namespace FocusAPI.Controllers
             var tripCategoriesDtos = _categoriesService.GetAll();
             return Ok(tripCategoriesDtos);
         }
-
-        // GET: api/Categories/5
-        [HttpGet("{id}")]
-        public ActionResult<TripCategoryDto> GetById([FromRoute] int id)
+        // GET: api/Categories/Search
+        [HttpGet("Search")]
+        public ActionResult<IEnumerable<TripCategoryDetailsDto>> Search([FromQuery] SearchDto? searchDto)
         {
-            var tripCategoryDto = _categoriesService.GetById(id);
-            return Ok(tripCategoryDto);
+            var tripCategoryDetailsDto = _categoriesService.Search(searchDto);
+            return Ok(tripCategoryDetailsDto);
         }
 
-        // GET: api/Trips/{category}
+        // GET: api/Categories/{category}
         [HttpGet("{category}")]
-        public ActionResult<IEnumerable<TripCategoryDetailsDto>> GetByName(string category)
+        public ActionResult<IEnumerable<TripCategoryDetailsDto>> GetByName([FromRoute] string category)
         {
             var tripCategoryDetailsDto = _categoriesService.GetByName(category);
             return Ok(tripCategoryDetailsDto);
         }
+
+        
     }
 }
