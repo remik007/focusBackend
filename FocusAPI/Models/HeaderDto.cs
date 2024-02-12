@@ -9,5 +9,6 @@ namespace FocusAPI.Models
         public List<TripCategoryDto> TripCategories { get; set; }
         public List<TransportTypeDto> TransportTypes { get; set; }
         public List<SubPageDto> SubPages { get; set; }
+        public ContactDto ContactDetails { get; set; }
     }
 }

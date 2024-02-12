@@ -59,6 +59,12 @@ namespace FocusAPI.Data
                     _context.Participants.AddRange(participants);
                     _context.SaveChanges();
                 }
+                if (!_context.Contacts.Any())
+                {
+                    var contactDetails = GetContactDetails();
+                    _context.Contacts.Add(contactDetails);
+                    _context.SaveChanges();
+                }
             }
         }
 
@@ -302,6 +308,21 @@ namespace FocusAPI.Data
                 }
             };
             return participants;
+        }
+
+        private Contact GetContactDetails()
+        {
+            var contactDetails = new Contact()
+            {
+                Name = "Biuro Focus",
+                AddressLine1 = "ul. Kubańska 24/5",
+                AddressLine2 = "64-100 Leszno",
+                PhoneNumber = "+48502390961",
+                Email = "info@biuro-focus.pl",
+                Facebook = "https://facebook.com/biurofocus",
+                Instagram = "https://instagram.com/biurofocus"
+            };
+            return contactDetails;
         }
     }
 }

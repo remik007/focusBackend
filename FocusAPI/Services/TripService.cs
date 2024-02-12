@@ -68,6 +68,8 @@ namespace FocusAPI.Services
             var subPagesDto = _mapper.Map<List<SubPageDto>>(subPages);
             var countries = _context.Trips.Select(x => x.Country).Distinct().OrderBy(x => x).ToList();
             var departureCities = _context.Trips.Select(x => x.DepartureCity).Distinct().OrderBy(x => x).ToList();
+            var contactDetails = _context.Contacts.FirstOrDefault();
+            var contactDetailsDto = _mapper.Map<ContactDto>(contactDetails);
 
             var headerDto = new HeaderDto()
             {
@@ -75,7 +77,8 @@ namespace FocusAPI.Services
                 DepartureCities = departureCities,
                 SubPages = subPagesDto,
                 TripCategories = categoriesDto,
-                TransportTypes = transportTypesDto
+                TransportTypes = transportTypesDto,
+                ContactDetails = contactDetailsDto
             };
             return headerDto;
         }
