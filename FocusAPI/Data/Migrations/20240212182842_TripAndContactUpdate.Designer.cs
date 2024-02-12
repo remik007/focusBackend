@@ -3,6 +3,7 @@ using System;
 using FocusAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FocusAPI.Data.Migrations
 {
     [DbContext(typeof(FocusDbContext))]
-    partial class FocusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240212182842_TripAndContactUpdate")]
+    partial class TripAndContactUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -290,9 +293,6 @@ namespace FocusAPI.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Hotel")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("HotelStars")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageContent")

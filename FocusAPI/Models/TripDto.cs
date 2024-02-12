@@ -10,6 +10,9 @@ namespace FocusAPI.Models
         public string DepartureCity { get; set; }
         public string? Name { get; set; }
         public string? ShortDescription { get; set; }
+        public string? Hotel { get; set; }
+        public string? HotelStars { get; set; }
+        public string? Meals { get; set; }
         public string Description { get; set; }
         public string Prize { get; set; }
         public string? OldPrize { get; set; }
