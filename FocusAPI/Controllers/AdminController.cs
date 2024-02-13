@@ -101,10 +101,10 @@ namespace FocusAPI.Controllers
         }
 
         // PUT: api/Admin/Trips/5
-        [HttpPut("{id}")]
-        public ActionResult<TripDto> UpdateTrip([FromRoute] int id, [FromBody] TripDto tripDto)
+        [HttpPut("trips")]
+        public ActionResult<TripDto> UpdateTrip([FromBody] TripDto tripDto)
         {
-            var tripId = _adminService.UpdateTrip(id, tripDto);
+            var tripId = _adminService.UpdateTrip(tripDto);
             return Created($"/api/admin/trips/{tripId}", null);
         }
 
@@ -142,10 +142,10 @@ namespace FocusAPI.Controllers
         }
 
         // PUT: api/Admin/SubPages/5
-        [HttpPut("subpages/{id}")]
-        public ActionResult<SubPageDto> UpdateTrip([FromRoute] int id, [FromBody] SubPageDto subPageDto)
+        [HttpPut("subpages")]
+        public ActionResult<SubPageDto> UpdateTrip([FromBody] SubPageDto subPageDto)
         {
-            var subPageId = _adminService.UpdateSubPage(id, subPageDto);
+            var subPageId = _adminService.UpdateSubPage(subPageDto);
             return Created($"/api/admin/subpages/{subPageId}", null);
         }
 
@@ -208,10 +208,10 @@ namespace FocusAPI.Controllers
         }
 
         // PUT: api/Admin/Categories/5
-        [HttpPut("categories/{id}")]
-        public ActionResult<TripCategoryDto> UpdateCategory([FromRoute] int id, [FromBody] TripCategoryDto tripCategoryDto)
+        [HttpPut("categories")]
+        public ActionResult<TripCategoryDto> UpdateCategory([FromBody] TripCategoryDto tripCategoryDto)
         {
-            var tripCategoryId = _adminService.UpdateCategory(id, tripCategoryDto);
+            var tripCategoryId = _adminService.UpdateCategory(tripCategoryDto);
             return Created($"/api/admin/categories/{tripCategoryId}", null);
         }
 

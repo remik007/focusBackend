@@ -14,9 +14,12 @@ namespace FocusAPI
             CreateMap<SubPage, SubPageDto>();
             CreateMap<TransportType, TransportTypeDto>();
             CreateMap<SubPageDto, SubPage>();
-            CreateMap<TripDto, Trip>();
+            CreateMap<TripDto, Trip>()
+                .ForMember(m => m.TransportType, c => c.Ignore())
+                .ForMember(m => m.TripCategory, c => c.Ignore());
             CreateMap<Trip, TripDto>()
                 .ForMember(m => m.CurrentAvailableSeats, c => c.MapFrom(s => s.AvailableSeats - s.Reservations.Where(x => x.IsConfirmed == true).Sum(x => x.Participants.Count)));
+            CreateMap<TripCategoryDto, TripCategory>();
             CreateMap<TripCategory, TripCategoryDto>();
             CreateMap<Reservation, ReservationDto>()
                 .ForMember(m => m.TripName, c => c.MapFrom(x => x.Trip.Name))

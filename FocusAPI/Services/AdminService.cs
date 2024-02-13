@@ -32,12 +32,12 @@ namespace FocusAPI.Services
         SubPageDto GetSubPageById(int id);
         TripDto GetTripById(int id);
         TransportTypeDto GetTransportTypeById(int id);
-        int UpdateCategory(int id, TripCategoryDto tripCategoryDto);
+        int UpdateCategory(TripCategoryDto tripCategoryDto);
         int UpdateContact(ContactDto contactDto);
         int UpdateReservation(int id, ReservationDto reservationDto);
-        int UpdateSubPage(int id, SubPageDto subPageDto);
+        int UpdateSubPage(SubPageDto subPageDto);
         int UpdateTransportType(int id, TransportTypeDto typeDto);
-        int UpdateTrip(int id, TripDto tripDto);
+        int UpdateTrip(TripDto tripDto);
     }
     public class AdminService : IAdminService
     {
@@ -163,18 +163,18 @@ namespace FocusAPI.Services
             return trip.Id;
         }
 
-        public int UpdateTrip(int id, TripDto tripDto)
+        public int UpdateTrip(TripDto tripDto)
         {
-            var trip = _context.Trips.FirstOrDefault(x => x.Id == id);
+            var trip = _context.Trips.Any(x => x.Id == tripDto.Id);
 
-            if (trip == null)
+            if (!trip)
                 throw new NotFoundException("Trip not found");
 
             var updatedTrip = _mapper.Map<Trip>(tripDto);
             _context.Trips.Update(updatedTrip);
             _context.SaveChanges();
 
-            return trip.Id;
+            return tripDto.Id;
         }
 
         public void DeleteTrip(int id)
@@ -218,18 +218,18 @@ namespace FocusAPI.Services
             return subPage.Id;
         }
 
-        public int UpdateSubPage(int id, SubPageDto subPageDto)
+        public int UpdateSubPage(SubPageDto subPageDto)
         {
-            var subPage = _context.SubPages.FirstOrDefault(x => x.Id == id);
+            var subPage = _context.SubPages.Any(x => x.Id == subPageDto.Id);
 
-            if (subPage == null)
+            if (!subPage)
                 throw new NotFoundException("SubPage not found");
 
             var updatedSubPage = _mapper.Map<SubPage>(subPageDto);
             _context.SubPages.Update(updatedSubPage);
             _context.SaveChanges();
 
-            return subPage.Id;
+            return subPageDto.Id;
         }
 
         public void DeleteSubPage(int id)
@@ -315,18 +315,18 @@ namespace FocusAPI.Services
             return tripCategory.Id;
         }
 
-        public int UpdateCategory(int id, TripCategoryDto tripCategoryDto)
+        public int UpdateCategory(TripCategoryDto tripCategoryDto)
         {
-            var tripCategory = _context.TripCategories.FirstOrDefault(x => x.Id == id);
+            var tripCategory = _context.TripCategories.Any(x => x.Id == tripCategoryDto.Id);
 
-            if (tripCategory == null)
+            if (!tripCategory)
                 throw new NotFoundException("Category not found");
 
             var updateTripCategory = _mapper.Map<TripCategory>(tripCategoryDto);
             _context.TripCategories.Update(updateTripCategory);
             _context.SaveChanges();
 
-            return tripCategory.Id;
+            return tripCategoryDto.Id;
         }
 
         public void DeleteCategory(int id)

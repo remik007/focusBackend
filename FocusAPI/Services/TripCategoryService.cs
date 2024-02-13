@@ -47,6 +47,14 @@ namespace FocusAPI.Services
 
         public TripCategoryDetailsDto GetByName(string category)
         {
+            var tripCategory = _context.TripCategories
+                .Any(t => t.Name == category);
+
+            if (!tripCategory)
+                throw new NotFoundException("Trip Category not found");
+
+            
+
             var trips = _context.Trips
                 .Include(t => t.TripCategory)
                 .Include(t => t.TransportType)
@@ -54,9 +62,9 @@ namespace FocusAPI.Services
                 .Where(t => t.TripCategory.Name == category && t.IsEnabled == true && t.IsDeleted != true && t.To.AddDays(_appSettings.DisplayTripDateRangeInDays) > DateTime.Now)
                 .OrderByDescending(t => t.From)
                 .ToList();
-
+            var categoryId = _context.TripCategories.FirstOrDefault(t => t.Name == category).Id;
             var tripDtos = _mapper.Map<List<TripDto>>(trips);
-            var tripCategoryDetailsDto = new TripCategoryDetailsDto() { Name = category, Trips = tripDtos };
+            var tripCategoryDetailsDto = new TripCategoryDetailsDto() { Id = categoryId, Name = category, Trips = tripDtos };
 
             return tripCategoryDetailsDto;
         }
