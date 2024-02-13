@@ -14,6 +14,7 @@ namespace FocusAPI
             CreateMap<SubPage, SubPageDto>();
             CreateMap<TransportType, TransportTypeDto>();
             CreateMap<SubPageDto, SubPage>();
+            CreateMap<ContactDto, Contact>();
             CreateMap<TripDto, Trip>()
                 .ForMember(m => m.TransportType, c => c.Ignore())
                 .ForMember(m => m.TripCategory, c => c.Ignore());

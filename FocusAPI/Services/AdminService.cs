@@ -259,13 +259,8 @@ namespace FocusAPI.Services
 
         public int UpdateContact(ContactDto contactDto)
         {
-            var contact = _context.Contacts.FirstOrDefault();
-
-            if (contact == null)
-                throw new NotFoundException("Contact not found");
-
-            var updatedContact = _mapper.Map<Contact>(contactDto);
-            _context.Contacts.Update(updatedContact);
+            var  contact = _mapper.Map<Contact>(contactDto);
+            _context.Contacts.Update(contact);
             _context.SaveChanges();
 
             return contact.Id;
