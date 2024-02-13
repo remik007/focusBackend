@@ -10,9 +10,6 @@ namespace FocusAPI.Models.Validators
             RuleFor(x => x.ShortName)
                 .NotEmpty()
                 .MaximumLength(63);
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(1023);
             RuleFor(x => x.ShortDescription)
                 .MaximumLength(2047);
             RuleFor(x => x.Description)
