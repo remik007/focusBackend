@@ -24,7 +24,7 @@ namespace FocusAPI.Services
         public SubPageDto GetByName(string subPageName)
         {
             var subPage = _context.SubPages
-                .FirstOrDefault(t => t.Name == subPageName);
+                .FirstOrDefault(t => t.ShortName == subPageName);
 
             if (subPage == null)
                 throw new NotFoundException("Sub Page not found");
