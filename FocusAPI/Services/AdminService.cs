@@ -13,9 +13,9 @@ namespace FocusAPI.Services
         int CreateSubPage(SubPageDto subPageDto);
         int CreateTransportType(TransportTypeDto typeDto);
         int CreateTrip(TripDto tripDto);
-        void DeleteCategory(int id);
+        void DeleteCategory(string category);
         void DeleteReservation(int id);
-        void DeleteSubPage(int id);
+        void DeleteSubPage(string subpage);
         void DeleteTransportType(int id);
         void DeleteTrip(int id);
         IEnumerable<TripCategoryDto> GetAllCategories();
@@ -232,9 +232,9 @@ namespace FocusAPI.Services
             return subPageDto.Id;
         }
 
-        public void DeleteSubPage(int id)
+        public void DeleteSubPage(string subpage)
         {
-            var subPage = _context.SubPages.FirstOrDefault(x => x.Id == id);
+            var subPage = _context.SubPages.FirstOrDefault(x => x.ShortName == subpage);
 
             if (subPage == null)
                 throw new NotFoundException("SubPage not found");
@@ -324,9 +324,9 @@ namespace FocusAPI.Services
             return tripCategoryDto.Id;
         }
 
-        public void DeleteCategory(int id)
+        public void DeleteCategory(string category)
         {
-            var tripCategory = _context.TripCategories.FirstOrDefault(x => x.Id == id);
+            var tripCategory = _context.TripCategories.Include(c => c.Trips).FirstOrDefault(x => x.Name == category);
 
             if (tripCategory == null)
                 throw new NotFoundException("Category not found");

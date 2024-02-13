@@ -134,10 +134,10 @@ namespace FocusAPI.Controllers
         }
 
         // DELETE: api/Admin/SubPages/5
-        [HttpDelete("subpages/{id}")]
-        public ActionResult<SubPageDto> DeleteSubPage([FromRoute] int id)
+        [HttpDelete("subpages/{subpage}")]
+        public ActionResult<SubPageDto> DeleteSubPage([FromRoute] string subpage)
         {
-            _adminService.DeleteSubPage(id);
+            _adminService.DeleteSubPage(subpage);
             return Created($"/api/admin/subpages", null);
         }
 
@@ -200,10 +200,10 @@ namespace FocusAPI.Controllers
         }
 
         // DELETE: api/Admin/Categories/5
-        [HttpDelete("categories/{id}")]
-        public ActionResult<TripCategoryDto> DeleteCategory([FromRoute] int id)
+        [HttpDelete("categories/{category}")]
+        public ActionResult<TripCategoryDto> DeleteCategory([FromRoute] string category)
         {
-            _adminService.DeleteCategory(id);
+            _adminService.DeleteCategory(category);
             return Created($"/api/admin/categories", null);
         }
 
