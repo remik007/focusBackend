@@ -11,10 +11,12 @@ namespace FocusAPI.Services
 {
     public interface ITripService
     {
-        public TripDto GetById(int id);
+        public GetTripDto GetById(int id);
+        public GetImageDto GetImageById(int id);
         public IEnumerable<TripDto> GetAll();
         public HeaderDto GetHeader();
-        public IEnumerable<TripDto> GetHighlightedTrips();
+        public IEnumerable<GetTripDto> GetHighlightedTrips();
+        public IEnumerable<GetImageDto> GetHighlightedImages();
     }
     public class TripService : ITripService
     {
@@ -28,8 +30,18 @@ namespace FocusAPI.Services
             _mapper = mapper;
             _appSettings = appSettings;
         }
+        public IEnumerable<GetImageDto> GetHighlightedImages()
+        {
+            var trips = _context.Trips
+                .Where(t => t.IsHighlighted == true && t.IsDeleted != true && t.IsEnabled == true)
+                .OrderByDescending(t => t.From)
+                .ToList();
 
-        public TripDto GetById(int id)
+            var tripDtos = _mapper.Map<List<GetImageDto>>(trips);
+            return tripDtos;
+        }
+
+        public GetTripDto GetById(int id)
         {
             var trip = _context.Trips
                 .Include(t => t.TripCategory)
@@ -40,8 +52,20 @@ namespace FocusAPI.Services
             if (trip == null)
                 throw new NotFoundException("Trip not found");
 
-            var tripDto = _mapper.Map<TripDto>(trip);
+            var tripDto = _mapper.Map<GetTripDto>(trip);
             return tripDto;
+        }
+
+        public GetImageDto GetImageById(int id)
+        {
+            var trip = _context.Trips
+                .FirstOrDefault(t => t.Id == id && t.IsEnabled == true && t.IsDeleted != true && t.To.AddDays(_appSettings.DisplayTripDateRangeInDays) > DateTime.Now);
+
+            if (trip == null)
+                throw new NotFoundException("Trip not found");
+
+            var getImageDto = _mapper.Map<GetImageDto>(trip);
+            return getImageDto;
         }
 
         public IEnumerable<TripDto> GetAll()
@@ -83,7 +107,7 @@ namespace FocusAPI.Services
             return headerDto;
         }
 
-        public IEnumerable<TripDto> GetHighlightedTrips()
+        public IEnumerable<GetTripDto> GetHighlightedTrips()
         {
             var trips = _context.Trips
                 .Include(t => t.TripCategory)
@@ -92,7 +116,7 @@ namespace FocusAPI.Services
                 .OrderByDescending(t => t.From)
                 .ToList();
 
-            var tripDtos = _mapper.Map<List<TripDto>>(trips);
+            var tripDtos = _mapper.Map<List<GetTripDto>>(trips);
             return tripDtos;
         }
     }

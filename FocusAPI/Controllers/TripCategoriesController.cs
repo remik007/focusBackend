@@ -38,6 +38,22 @@ namespace FocusAPI.Controllers
             return Ok(tripCategoryDetailsDto);
         }
 
+        // GET: api/Categories/Images/{category}
+        [HttpGet("images/{category}")]
+        public ActionResult<IEnumerable<GetImageDto>> GetCategoryImages([FromRoute] string category)
+        {
+            var getImageDtos = _categoriesService.GetCategoryImages(category);
+            return Ok(getImageDtos);
+        }
+
+        // GET: api/Categories/Images/Search
+        [HttpGet("images/search")]
+        public ActionResult<IEnumerable<GetImageDto>> GetSearchImages([FromQuery] SearchDto? searchDto)
+        {
+            var getImageDtos = _categoriesService.GetSearchImages(searchDto);
+            return Ok(getImageDtos);
+        }
+
         // GET: api/Categories/{category}
         [HttpGet("{category}")]
         public ActionResult<IEnumerable<TripCategoryDetailsDto>> GetByName([FromRoute] string category)
@@ -45,7 +61,5 @@ namespace FocusAPI.Controllers
             var tripCategoryDetailsDto = _categoriesService.GetByName(category);
             return Ok(tripCategoryDetailsDto);
         }
-
-        
     }
 }

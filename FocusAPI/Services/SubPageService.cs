@@ -7,7 +7,8 @@ namespace FocusAPI.Services
 {
     public interface ISubPageService
     {
-        public SubPageDto GetByName(string subPageName);
+        public GetSubPageDto GetByName(string subPageName);
+        public GetImageDto GetImageByName(string subPageName);
         public IEnumerable<SubPageDto> GetAll();
     }
     public class SubPageService : ISubPageService
@@ -21,7 +22,7 @@ namespace FocusAPI.Services
             _mapper = mapper;
         }
 
-        public SubPageDto GetByName(string subPageName)
+        public GetSubPageDto GetByName(string subPageName)
         {
             var subPage = _context.SubPages
                 .FirstOrDefault(t => t.ShortName == subPageName);
@@ -29,8 +30,19 @@ namespace FocusAPI.Services
             if (subPage == null)
                 throw new NotFoundException("Sub Page not found");
 
-            var subPageDto = _mapper.Map<SubPageDto>(subPage);
+            var subPageDto = _mapper.Map<GetSubPageDto>(subPage);
             return subPageDto;
+        }
+        public GetImageDto GetImageByName(string subPageName)
+        {
+            var subPage = _context.SubPages
+                .FirstOrDefault(t => t.ShortName == subPageName);
+
+            if (subPage == null)
+                throw new NotFoundException("Sub Page not found");
+
+            var getImageDto = _mapper.Map<GetImageDto>(subPage);
+            return getImageDto;
         }
 
         public IEnumerable<SubPageDto> GetAll()

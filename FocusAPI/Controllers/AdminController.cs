@@ -80,8 +80,16 @@ namespace FocusAPI.Controllers
         [HttpGet("trips/{id}")]
         public ActionResult<TripDto> GetTripById([FromRoute] int id)
         {
-            var tripDto = _adminService.GetTripById(id);
-            return Ok(tripDto);
+            var getTripDto = _adminService.GetTripById(id);
+            return Ok(getTripDto);
+        }
+
+        // GET: api/Admin/Trips/Images/5
+        [HttpGet("trips/images/{id}")]
+        public ActionResult<GetImageDto> GetTripImageById([FromRoute] int id)
+        {
+            var getImageDto = _adminService.GetTripImageById(id);
+            return Ok(getImageDto);
         }
 
         // POST: api/Admin/Trips
@@ -117,11 +125,12 @@ namespace FocusAPI.Controllers
             return Ok(subPageDtos);
         }
 
+
         // GET: api/Admin/SubPages/5
-        [HttpGet("subpages/{id}")]
-        public ActionResult<SubPageDto> GetSubPageById([FromRoute] int id)
+        [HttpGet("subpages/{subPageName}")]
+        public ActionResult<SubPageDto> GetSubPageByName([FromRoute] string subPageName)
         {
-            var subPageDto = _adminService.GetSubPageById(id);
+            var subPageDto = _adminService.GetSubPageByName(subPageName);
             return Ok(subPageDto);
         }
 
@@ -183,12 +192,20 @@ namespace FocusAPI.Controllers
             return Ok(tripCategoryDto);
         }
 
-        // GET: api/Admin/Categories/{category}
+        // GET: api/Admin/Categories/GetCategoryByName{category}
         [HttpGet("categories/GetCategoryByName/{category}")]
         public ActionResult<TripCategoryDetailsDto> GetCategoryByName([FromRoute] string category)
         {
             var tripCategoryDetailsDto = _adminService.GetCategoryByName(category);
             return Ok(tripCategoryDetailsDto);
+        }
+
+        // GET: api/Admin/Categories/images/GetCategoryByName{category}
+        [HttpGet("categories/images/GetCategoryByName/{category}")]
+        public ActionResult<IEnumerable<GetImageDto>> GetCategoryImagesByName([FromRoute] string category)
+        {
+            var getImageDtos = _adminService.GetCategoryByName(category);
+            return Ok(getImageDtos);
         }
 
         // POST: api/Admin/Categories
@@ -221,6 +238,14 @@ namespace FocusAPI.Controllers
         {
             var tripCategoryDetailsDto = _adminService.Search(searchDto);
             return Ok(tripCategoryDetailsDto);
+        }
+
+        // GET: api/Admin/Categories/Search
+        [HttpGet("categories/images/search")]
+        public ActionResult<IEnumerable<GetImageDto>> GetSearchImages([FromQuery] SearchDto? searchDto)
+        {
+            var getImageDtos = _adminService.GetSearchImages(searchDto);
+            return Ok(getImageDtos);
         }
 
         //TransportTypes---------------------------------------------------------------------------------------------------------

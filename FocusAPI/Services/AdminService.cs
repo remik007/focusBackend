@@ -25,12 +25,15 @@ namespace FocusAPI.Services
         IEnumerable<TripDto> GetAllTrips();
         IEnumerable<AppUserDto> GetUsers();
         TripCategoryDetailsDto GetCategoryByName(string category);
+        IEnumerable<GetImageDto> GetCategoryImagesByName(string category);
         TripCategoryDetailsDto Search(SearchDto searchDto);
+        IEnumerable<GetImageDto> GetSearchImages(SearchDto searchDto);
         TripCategoryDto GetCategoryById(int id);
         ContactDto GetContact();
         ReservationDto GetReservationById(int id);
-        SubPageDto GetSubPageById(int id);
+        SubPageDto GetSubPageByName(string name);
         TripDto GetTripById(int id);
+        GetImageDto GetTripImageById(int id);
         TransportTypeDto GetTransportTypeById(int id);
         int UpdateCategory(TripCategoryDto tripCategoryDto);
         int UpdateContact(ContactDto contactDto);
@@ -142,6 +145,18 @@ namespace FocusAPI.Services
             return tripDto;
         }
 
+        public GetImageDto GetTripImageById(int id)
+        {
+            var trip = _context.Trips
+                .FirstOrDefault(t => t.Id == id);
+
+            if (trip == null)
+                throw new NotFoundException("Trip not found");
+
+            var getImageDto = _mapper.Map<GetImageDto>(trip);
+            return getImageDto;
+        }
+
         public IEnumerable<TripDto> GetAllTrips()
         {
             var trips = _context.Trips
@@ -191,9 +206,9 @@ namespace FocusAPI.Services
         }
 
         //SubPages---------------------------------------------------------------------------------------------------
-        public SubPageDto GetSubPageById(int id)
+        public SubPageDto GetSubPageByName(string name)
         {
-            var subpage = _context.SubPages.FirstOrDefault(t => t.Id == id);
+            var subpage = _context.SubPages.FirstOrDefault(t => t.ShortName == name);
 
             if (subpage == null)
                 throw new NotFoundException("SubPage not found");
@@ -288,10 +303,22 @@ namespace FocusAPI.Services
                 .OrderByDescending(t => t.From)
                 .ToList();
 
-            var tripDtos = _mapper.Map<List<TripDto>>(trips);
+            var tripDtos = _mapper.Map<List<GetTripDto>>(trips);
             var tripCategoryDetailsDto = new TripCategoryDetailsDto() { Name = category, Trips = tripDtos };
 
             return tripCategoryDetailsDto;
+        }
+
+        public IEnumerable<GetImageDto> GetCategoryImagesByName(string category)
+        {
+            var trips = _context.Trips
+                .Where(t => t.IsDeleted != null && t.TripCategory.Name == category)
+                .OrderByDescending(t => t.From)
+                .ToList();
+
+            var getImageDtos = _mapper.Map<List<GetImageDto>>(trips);
+
+            return getImageDtos;
         }
 
         public IEnumerable<TripCategoryDto> GetAllCategories()
@@ -352,10 +379,28 @@ namespace FocusAPI.Services
                 .OrderByDescending(t => t.From)
                 .ToList();
 
-            var tripDtos = _mapper.Map<List<TripDto>>(trips);
+            var tripDtos = _mapper.Map<List<GetTripDto>>(trips);
             var tripCategoryDetailsDto = new TripCategoryDetailsDto() { Name = "Wyniki wyszukiwania", Trips = tripDtos };
 
             return tripCategoryDetailsDto;
+        }
+
+        public IEnumerable<GetImageDto> GetSearchImages(SearchDto search)
+        {
+            var trips = _context.Trips
+                .Where(t => t.IsDeleted != true
+                    && (search.Country == null || t.Country == search.Country)
+                    && (search.TransportType == null || t.TransportType.Name == search.TransportType)
+                    && (search.DepartureCity == null || t.DepartureCity == search.DepartureCity)
+                    && (search.From == null || t.From >= search.From)
+                    && (search.To == null || t.To <= search.To)
+                    )
+                .OrderByDescending(t => t.From)
+                .ToList();
+
+            var getImageDtos = _mapper.Map<List<GetImageDto>>(trips);
+
+            return getImageDtos;
         }
 
         //TransportTypes---------------------------------------------------------------------------------------------------

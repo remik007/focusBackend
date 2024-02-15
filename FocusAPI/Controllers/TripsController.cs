@@ -33,10 +33,18 @@ namespace FocusAPI.Controllers
 
         // GET: api/Trips/5
         [HttpGet("{id}")]
-        public ActionResult<TripDto> GetById([FromRoute] int id)
+        public ActionResult<GetTripDto> GetById([FromRoute] int id)
         {
-            var tripDto = _tripService.GetById(id);
-            return Ok(tripDto);
+            var getTripDto = _tripService.GetById(id);
+            return Ok(getTripDto);
+        }
+
+        // GET: api/Trips/5
+        [HttpGet("images/{id}")]
+        public ActionResult<GetImageDto> GetImageById([FromRoute] int id)
+        {
+            var getImageDto = _tripService.GetImageById(id);
+            return Ok(getImageDto);
         }
 
         // GET: api/Trips/header
@@ -49,10 +57,18 @@ namespace FocusAPI.Controllers
 
         // GET: api/Trips/Highlighted
         [HttpGet("highlighted")]
-        public ActionResult<TripDto> GetHighlightedTrips()
+        public ActionResult<GetTripDto> GetHighlightedTrips()
         {
             var tripDto = _tripService.GetHighlightedTrips();
             return Ok(tripDto);
+        }
+
+        // GET: api/Trips/Images/Highlighted
+        [HttpGet("images/highlighted")]
+        public ActionResult<GetImageDto> GetHighlightedImages()
+        {
+            var getImageDtos = _tripService.GetHighlightedImages();
+            return Ok(getImageDtos);
         }
     }
 }

@@ -32,10 +32,18 @@ namespace FocusAPI.Controllers
 
         // GET: api/SubPages/5
         [HttpGet("{subPageName}")]
-        public ActionResult<SubPageDto> GetById([FromRoute] string subPageName)
+        public ActionResult<GetSubPageDto> GetById([FromRoute] string subPageName)
         {
-            var subPageDto = _subpageService.GetByName(subPageName);
-            return Ok(subPageDto);
+            var getSubPageDto = _subpageService.GetByName(subPageName);
+            return Ok(getSubPageDto);
+        }
+
+        // GET: api/SubPages/5
+        [HttpGet("images/{subPageName}")]
+        public ActionResult<GetImageDto> GetImageById([FromRoute] string subPageName)
+        {
+            var getImageDto = _subpageService.GetImageByName(subPageName);
+            return Ok(getImageDto);
         }
     }
 }
